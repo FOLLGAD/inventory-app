@@ -22,7 +22,7 @@ export default class NumberInput extends Component {
 					value={this.state.text}
 				/>
 				<Button
-					onPress={(e) => this.props.onSubmit(this.state.text)}
+					onPress={() => this.props.onSubmit(this.state.text)}
 					title="Go"
 					color="#841584"
 					disabled={this.state.text.length === 0}

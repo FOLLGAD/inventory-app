@@ -11,12 +11,20 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 export default class ScanQR extends Component {
 	constructor(props) {
 		super(props);
+		this.onRead = this.onRead.bind(this);
+	}
+	onRead(e) {
+		this.props.onSuccess && this.props.onSuccess(e.data)
 	}
 	render() {
 		return (
 			<QRCodeScanner
-				onRead={(e) => this.props.onSuccess(e.data)}
+				onRead={this.onRead}
 				topContent={<Text>Scan a code!</Text>}
+				reactivateTimeout={1}
+				reactivate={false}
+				showMarker={true}
+				ref={node => this.scanner = node}
 			/>
 		)
 	}

@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://abb.sharepoint.com/sites/CombiX/LabInventory';
