@@ -20,11 +20,11 @@ export default class ScanQR extends Component {
 		return (
 			<QRCodeScanner
 				onRead={this.onRead}
-				topContent={<Text>Scan a code!</Text>}
+				topContent={<Text>Scan a code a!</Text>}
 				reactivateTimeout={1}
-				reactivate={false}
 				showMarker={true}
 				ref={node => this.scanner = node}
+				reactive={true}
 			/>
 		)
 	}

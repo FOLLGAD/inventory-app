@@ -13,25 +13,24 @@ import {
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-
-import Inventory from './src/views/Inventory';
-import AppLogin from './src/views/AppLogin';
+import Main from './src/views/Main';
 
 import reducers from './src/reducers';
+
 
 const store = createStore(reducers, applyMiddleware(thunkMiddleware));
 
 class App extends Component {
 	render() {
-		let isLoggedIn = false;
-		console.log(store);
 		return (
 			<Provider store={store}>
-				{isLoggedIn ? <CodeInput screenProps={{ onInput: this.handleInput }} /> : <AppLogin />}
+				<Main />
 			</Provider>
 		);
 	}
 }
+
+export default App;
 
 const styles: object = StyleSheet.create({
 	container: {

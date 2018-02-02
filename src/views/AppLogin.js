@@ -14,39 +14,36 @@ import {
 import LoginForm from '../components/LoginForm';
 import { login } from '../actions';
 import { connect } from 'react-redux';
-
-const $SP = require('sharepointplus');
+import { authorize } from '../api';
 
 class AppLogin extends Component {
+	constructor(props) {
+		super(props);
+
+		this.login = this.login.bind(this);
+		this.handleInput = this.handleInput.bind(this);
+		this.validateLogin = this.validateLogin.bind(this);
+	}
 	handleInput(input) {
 		ToastAndroid.show(`The code is ${input}`, ToastAndroid.LONG);
 	}
 	validateLogin() {
-		AsyncStorage.getItem('loginCookie').then(cookie => {
-			console.log('Cookie:', cookie);
+		return new Promise((res, rej) => {
+			AsyncStorage.getItem('loginCookie').then(cookie => {
+				Boolean(cookie) ? res(cookie) : rej();
+			}).catch(rej);
 		})
-			.catch(error => {
-				console.log(error);
-			})
 	}
 	login(email, password) {
-		const credentials = {
+		const creds = {
 			username: 'emil.ahlback@abbindustrigymnasium.se',
 			password: '1Bemi1Babian',
-			domain: 'abb.sharepoint.com/sites/CombiX/LabInventory/'
 		};
 
-		const proxyweb = "http://" + credentials.domain + "%5C" + credentials.username + ":" + credentials.password + "@proxy:80";
-
-		const sp = $SP()
-			.auth(credentials);
-
-		let articles = sp.list('Artiklar', 'https://abb.sharepoint.com/sites/CombiX/LabInventory/')
-			.get({})
-			.then(e => {
-				console.log(
-					e[0].getAttribute('Title')
-				)
+		authorize(creds.username, creds.password)
+			.then((name) => {
+				console.log("this in authorize", this)
+				this.props.dispatchLogin();
 			})
 			.catch(console.error)
 	}
@@ -79,10 +76,10 @@ const styles: object = StyleSheet.create({
 });
 
 let mapStateToProps = state => ({
-	cookie: state.cookie
+	loginCookie: state.loginCookie
 })
 let mapDispatchToProps = dispatch => ({
-	dispatchLogin: (email, password) => dispatch(login(email, password)),
+	dispatchLogin: () => dispatch(login()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppLogin);

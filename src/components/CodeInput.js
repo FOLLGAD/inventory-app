@@ -11,17 +11,16 @@ import {
 
 import { TabNavigator } from 'react-navigation';
 
-import NumberInput from '../components/NumberInput';
-import ScanQR from '../components/ScanQR';
+import NumberInput from './NumberInput';
+import ScanQR from './ScanQR';
 
 class ScanScreen extends Component {
 	constructor(props) {
 		super(props)
-		console.log(props.screenProps)
-	}
 
-	state = {
-		appState: AppState.currentState
+		this.state = {
+			appState: AppState.currentState
+		};
 	}
 
 	// If appstate is in foreground ('active'), enable the camera. Elsewise, do not. This is a measure as to save on battery, so the camera is not running while the phone is locked or in another app.
@@ -36,11 +35,9 @@ class ScanScreen extends Component {
 	}
 
 	render() {
-		// <View>
 		return (
-			this.state.appState == 'active' ? <ScanQR onSuccess={this.props.screenProps.onInput} /> : null
+			AppState.currentState == 'active' || this.state.appState == 'active' ? <ScanQR onSuccess={this.props.screenProps.onInput} /> : null
 		)
-		// </View>
 	}
 }
 
