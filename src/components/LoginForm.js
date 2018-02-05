@@ -28,12 +28,14 @@ export default class LoginForm extends Component {
 					placeholder="Password"
 					onChangeText={(password) => this.setState({ password })}
 					value={this.state.password}
+					secureTextEntry={true}
 				/>
 				<Button
 					onPress={() => this.props.onSubmit(this.state.email, this.state.password)}
 					title="Log in"
 					color="#841584"
-					disabled={this.state.email.length === 0 || this.state.password.length === 0}
+					// disabled={this.state.email.length === 0 || this.state.password.length === 0}
+					disabled={false}
 				/>
 			</View>
 		)

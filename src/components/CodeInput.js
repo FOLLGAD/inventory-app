@@ -21,6 +21,12 @@ class ScanScreen extends Component {
 		this.state = {
 			appState: AppState.currentState
 		};
+
+		this.onInput = this.onInput.bind(this);
+	}
+	onInput(inp) {
+		this.props.screenProps.onInput(inp);
+		this.props.navigation.navigate('ItemScreen');
 	}
 
 	// If appstate is in foreground ('active'), enable the camera. Elsewise, do not. This is a measure as to save on battery, so the camera is not running while the phone is locked or in another app.
@@ -36,7 +42,9 @@ class ScanScreen extends Component {
 
 	render() {
 		return (
-			AppState.currentState == 'active' || this.state.appState == 'active' ? <ScanQR onSuccess={this.props.screenProps.onInput} /> : null
+			this.state.appState == 'active' ? (
+				<ScanQR onSuccess={this.onInput} />
+			) : <View />
 		)
 	}
 }
@@ -44,14 +52,19 @@ class ScanScreen extends Component {
 class ManInputScreen extends Component {
 	constructor(props) {
 		super(props)
-		console.log(props)
+
+		this.onInput = this.onInput.bind(this);
+	}
+	onInput(inp) {
+		this.props.screenProps.onInput(inp);
+		this.props.navigation.navigate('ItemScreen');
 	}
 	render() {
-		// <View>
 		return (
-			<NumberInput onSubmit={this.props.screenProps.onInput} />
+			<View>
+				<NumberInput onSubmit={this.onInput} />
+			</View>
 		)
-		// </View>
 	}
 }
 

@@ -1,0 +1,1 @@
+state loginCookie is set to AUTHED, which Main.js recognizes

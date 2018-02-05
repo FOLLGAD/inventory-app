@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import {
 	View,
+	StyleSheet,
 } from 'react-native';
 
-import CodeInput from '../components/CodeInput';
 import AppLogin from './AppLogin';
 import Inventory from './Inventory';
 
@@ -13,8 +13,8 @@ import { connect } from 'react-redux';
 class Main extends Component {
 	render() {
 		return (
-			<View>
-				{this.props.isLoggedIn ? <CodeInput screenProps={{ onInput: this.handleInput }} /> : <AppLogin />}
+			<View style={styles.container} >
+				{this.props.isLoggedIn ? <Inventory /> : <AppLogin />}
 			</View>
 		);
 	}
@@ -25,5 +25,13 @@ function mapStateToProps(state) {
 		isLoggedIn: Boolean(state.loginCookie),
 	}
 }
+
+const styles: object = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		// alignItems: 'center',
+	},
+});
 
 export default connect(mapStateToProps)(Main);

@@ -10,16 +10,30 @@ import {
 	ToastAndroid,
 } from 'react-native';
 
+import InventoryStack from '../components/InventoryStack';
+
+import { lookupItem } from '../api';
+
 export default class App extends Component {
+	constructor(props) {
+		super(props)
+
+		this.state = { currentItem: null };
+
+		this.handleInput = this.handleInput.bind(this);
+	}
 	handleInput(input) {
 		ToastAndroid.show(`The code is ${input}`, ToastAndroid.LONG);
+		lookupItem(input)
+			.then(d => {
+				this.setState({ currentItem: d });
+			})
+			.catch(console.error);
 	}
 	render() {
 		return (
-			<View>
-				<CodeInput screenProps={{ onInput: this.handleInput }} />
-			</View>
-		);
+			<InventoryStack screenProps={{ onInput: this.handleInput, item: this.state.currentItem }} />
+		)
 	}
 }
 
@@ -28,16 +42,5 @@ const styles: object = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
-	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
-	},
-	instructions: {
-		textAlign: 'center',
-		color: '#333333',
-		marginBottom: 5,
 	},
 });
