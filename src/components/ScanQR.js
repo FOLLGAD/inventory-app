@@ -6,7 +6,7 @@ import {
 	View,
 } from 'react-native';
 
-import QRCodeScanner from 'react-native-qrcode-scanner';
+import Camera from 'react-native-camera';
 
 export default class ScanQR extends Component {
 	constructor(props) {
@@ -14,17 +14,41 @@ export default class ScanQR extends Component {
 		this.onRead = this.onRead.bind(this);
 	}
 	onRead(e) {
-		this.props.onSuccess && this.props.onSuccess(e.data)
+		this.props.activated && this.props.onSuccess(e.data)
 	}
 	render() {
 		return (
-			<QRCodeScanner
-				onRead={this.onRead}
-				topContent={<Text>Scan a code code a!</Text>}
-				reactivateTimeout={1}
-				showMarker={true}
-				fadeIn={true}
-			/>
+			<View style={styles.container}>
+				<Camera
+					style={styles.preview}
+					onBarCodeRead={this.onRead}
+					// barCodeTypes={[Camera.constants.BarCodeType.qr]}
+					aspect={Camera.constants.Aspect.fill}
+					ref={cam => this.camera = cam}
+				>
+					<Text style={styles.capture}>CAPTURE</Text>
+				</Camera>
+			</View>
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		flexDirection: 'row',
+	},
+	preview: {
+		flex: 1,
+		justifyContent: 'flex-end',
+		alignItems: 'center'
+	},
+	capture: {
+		flex: 0,
+		backgroundColor: '#fff',
+		borderRadius: 5,
+		color: '#000',
+		padding: 10,
+		margin: 40
+	}
+});
