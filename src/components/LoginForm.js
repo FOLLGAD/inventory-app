@@ -35,7 +35,6 @@ export default class LoginForm extends Component {
 					title="Log in"
 					color="#841584"
 					// disabled={this.state.email.length === 0 || this.state.password.length === 0}
-					disabled={false}
 				/>
 			</View>
 		)

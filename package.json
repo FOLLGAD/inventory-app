@@ -8,6 +8,8 @@
     "android": "react-native run-android"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "base-64": "^0.1.0",
     "cross-fetch": "^1.1.1",
     "http": "0.0.0",
     "react": "16.2.0",

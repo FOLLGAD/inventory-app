@@ -1,40 +1,54 @@
-let testing = true;
+import axios from 'axios';
+import store from './store';
+import { toBasicAuth } from './utils';
+import { apiUrl, testingMode } from './config';
 
-let apiUrl = 'https://abb.sharepoint.com/sites/CombiX/LabInventory/_api'
+let axiosInstance = axios.create({
+	baseURL: apiUrl,
+});
+
+store.subscribe(() => {
+	let state = store.getState();
+	axiosInstance = axios.create({
+		baseURL: apiUrl,
+		headers: {
+			token: state.loginToken,
+		},
+	});
+});
 
 export function authorize(email, password) {
 	return new Promise((res, rej) => {
-		if (testing) {
-			// setTimeout(() => res({ name: 'Emil' }), 1000);
-			res({ name: 'Emil' })
+		if (testingMode) {
+			res({ name: 'Emil' });
+			return;
 		}
 
-		// fetch(apiUrl, {
-		// })
-		// .then(res => res.json())
-		// .then(res);
+		axiosInstance.get('/auth', {
+			headers: {
+				Authorization: toBasicAuth(email, password),
+				timeout: 5000,
+			}
+		}).then(response => {
+			res(response.data.token);
+		}).catch(err => {
+			console.log(err)
+			rej(err);
+		});
 	})
 }
 
-export function getAllLists() {
+export function getAllItems() {
 	return new Promise((res, rej) => {
-		if (testing) {
-			setTimeout(() => res(
-				[
-					{ name: 'Artiklar', items: [{ name: 'Screwdriver' }] },
-				]
-			), 1000);
-			return;
-		}
+		axiosInstance.get('/items')
+			.then(response => {
+
+			})
 	})
 }
 
 export function getList(name) {
 	return new Promise((res, rej) => {
-		if (testing) {
-			setTimeout(() => res({ name: 'Artiklar', items: [{ name: 'Screwdriver' }] }), 1000);
-			return;
-		}
 	})
 }
 let containers = {

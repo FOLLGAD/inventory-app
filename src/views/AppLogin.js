@@ -41,10 +41,13 @@ class AppLogin extends Component {
 		};
 
 		authorize(creds.username, creds.password)
-			.then((name) => {
-				this.props.dispatchLogin();
+			.then((token) => {
+				this.props.dispatchLogin(token);
 			})
-			.catch(console.error)
+			.catch(err => {
+				console.log(err);
+
+			})
 	}
 	render() {
 		return (
@@ -55,7 +58,7 @@ class AppLogin extends Component {
 	}
 }
 
-const styles: object = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 	},
@@ -65,7 +68,7 @@ let mapStateToProps = state => ({
 	loginCookie: state.loginCookie,
 })
 let mapDispatchToProps = dispatch => ({
-	dispatchLogin: () => dispatch(login()),
+	dispatchLogin: token => dispatch(login(token)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppLogin);

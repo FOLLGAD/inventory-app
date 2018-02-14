@@ -1,7 +1,6 @@
-import { BASE_URL } from './config';
-
-export function login() {
+export function login(token) {
 	return {
 		type: 'LOGIN',
+		token,
 	}
 }
