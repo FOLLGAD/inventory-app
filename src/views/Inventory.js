@@ -12,11 +12,11 @@ import {
 
 import InventoryStack from '../components/InventoryStack';
 
-import { lookupItem } from '../api';
+import { getItem } from '../api';
 
 export default class App extends Component {
 	constructor(props) {
-		super(props)
+		super(props);
 
 		this.state = { currentItem: null };
 
@@ -24,15 +24,11 @@ export default class App extends Component {
 	}
 	handleInput(input) {
 		ToastAndroid.show(`The code is ${input}`, ToastAndroid.LONG);
-		lookupItem(input)
-			.then(d => {
-				this.setState({ currentItem: d });
-			})
-			.catch(console.error);
+		return getItem(input)
 	}
 	render() {
 		return (
-			<InventoryStack screenProps={{ onInput: this.handleInput, item: this.state.currentItem }} />
+			<InventoryStack ref={inp => this.inventoryStack = inp} screenProps={{ onInput: this.handleInput, item: this.state.currentItem }} />
 		)
 	}
 }

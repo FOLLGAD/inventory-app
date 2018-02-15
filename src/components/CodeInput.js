@@ -25,8 +25,13 @@ class ScanScreen extends Component {
 		this.onInput = this.onInput.bind(this);
 	}
 	onInput(inp) {
-		this.props.screenProps.onInput(inp);
-		this.props.navigation.navigate('ItemScreen');
+		this.props.screenProps.onInput(inp)
+			.then(item => {
+				this.props.navigation.navigate('ItemScreen');
+			})
+			.catch(err => {
+				console.log(err);
+			})
 	}
 
 	// If appstate is in foreground ('active'), enable the camera. Elsewise, do not. This is a measure as to save on battery, so the camera is not running while the phone is locked or in another app.
@@ -41,47 +46,19 @@ class ScanScreen extends Component {
 	}
 
 	render() {
-		return (
-			this.state.appState == 'active' ? (
-				<ScanQR onSuccess={this.onInput} />
-			) : <View />
-		)
-	}
-}
-
-class ManInputScreen extends Component {
-	constructor(props) {
-		super(props)
-
-		this.onInput = this.onInput.bind(this);
-	}
-	onInput(inp) {
-		this.props.screenProps.onInput(inp);
-		this.props.navigation.navigate('ItemScreen');
-	}
-	render() {
+		console.log(this.state.appState)
 		return (
 			<View>
+				{this.state.appState == 'active' ? (
+					<ScanQR onSuccess={this.onInput} />
+				) : <View />}
 				<NumberInput onSubmit={this.onInput} />
 			</View>
 		)
 	}
 }
 
-const RootTabs = TabNavigator({
-	Scan: {
-		screen: ScanScreen,
-	},
-	Input: {
-		screen: ManInputScreen,
-	},
-}, {
-		tabBarOptions: {
-			activeTintColor: '#e91e63',
-		},
-	});
-
-export default RootTabs;
+export default ScanScreen;
 
 const styles = StyleSheet.create({
 	centerText: {

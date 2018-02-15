@@ -5,6 +5,9 @@ import { apiUrl, testingMode } from './config';
 
 let axiosInstance = axios.create({
 	baseURL: apiUrl,
+	headers: {
+		token: store.getState().loginToken,
+	},
 });
 
 store.subscribe(() => {
@@ -49,12 +52,15 @@ export function getList(name) {
 
 export function getItem(itemId) {
 	return new Promise((res, rej) => {
-		itemId in items ? res(items[itemId]) : rej("Item not found")
+		axiosInstance
+			.get(`/items/${itemId}`)
+			.then(res)
+			.catch(rej);
 	});
 }
 
 export function getContainer(containerId) {
 	return new Promise((res, rej) => {
-		containerId in containers ? res(containers[containerId]) : rej("Container not found")
+		rej()
 	})
 }
