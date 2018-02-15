@@ -28,12 +28,12 @@ export default class App extends Component {
 	}
 	render() {
 		return (
-			<InventoryStack ref={inp => this.inventoryStack = inp} screenProps={{ onInput: this.handleInput, item: this.state.currentItem }} />
+			<InventoryStack screenProps={{ onInput: this.handleInput, item: this.state.currentItem }} />
 		)
 	}
 }
 
-const styles: object = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',

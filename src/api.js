@@ -26,7 +26,7 @@ export function authorize(email, password) {
 			headers: {
 				Authorization: toBasicAuth(email, password),
 			},
-			timeout: 2000,
+			timeout: 5000,
 		}).then(response => {
 			console.log(response)
 			res(response.data.token);

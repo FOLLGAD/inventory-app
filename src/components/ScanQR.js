@@ -4,9 +4,10 @@ import {
 	StyleSheet,
 	Text,
 	View,
+	TouchableOpacity,
 } from 'react-native';
 
-import Camera from 'react-native-camera';
+import { RNCamera } from 'react-native-camera';
 
 export default class ScanQR extends Component {
 	constructor(props) {
@@ -18,17 +19,18 @@ export default class ScanQR extends Component {
 	}
 	render() {
 		return (
-			<View style={styles.container}>
-				<Camera
-					style={styles.preview}
-					onBarCodeRead={this.onRead}
-					// barCodeTypes={[Camera.constants.BarCodeType.qr]}
-					aspect={Camera.constants.Aspect.fill}
-					ref={cam => this.camera = cam}
-				>
-					<Text style={styles.capture}>CAPTURE</Text>
-				</Camera>
-			</View>
+			// <View style={styles.container}>
+			<RNCamera
+				style={styles.preview}
+				onBarCodeRead={this.onRead}
+				// barCodeTypes={[Camera.constants.BarCodeType.qr]}
+				type={RNCamera.constants.Type.front}
+				aspect={RNCamera.constants.Aspect.fill}
+				ref={cam => this.camera = cam}
+			>
+			</RNCamera>
+			// {/* <Text style={styles.capture} onPress={() => console.log(this.camera)}>CAPTURE</Text> */}
+			// {/* </View> */}
 		)
 	}
 }

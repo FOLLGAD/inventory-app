@@ -22,7 +22,7 @@ const App = StackNavigator({
 
 export default App;
 
-const styles: object = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',

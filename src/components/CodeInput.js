@@ -9,9 +9,6 @@ import {
 	AppState,
 } from 'react-native';
 
-import { TabNavigator } from 'react-navigation';
-
-import NumberInput from './NumberInput';
 import ScanQR from './ScanQR';
 
 class ScanScreen extends Component {
@@ -46,14 +43,10 @@ class ScanScreen extends Component {
 	}
 
 	render() {
-		console.log(this.state.appState)
 		return (
-			<View>
-				{this.state.appState == 'active' ? (
-					<ScanQR onSuccess={this.onInput} />
-				) : <View />}
-				<NumberInput onSubmit={this.onInput} />
-			</View>
+			this.state.appState == 'active' ? (
+				<ScanQR onSuccess={this.onInput} />
+			) : <View />
 		)
 	}
 }

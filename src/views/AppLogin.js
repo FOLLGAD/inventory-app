@@ -40,9 +40,8 @@ class AppLogin extends Component {
 			password: '1Bemi1Babian',
 		};
 
-		authorize(creds.username, creds.password)
+		authorize(email || creds.username, password || creds.password)
 			.then(token => {
-				console.log(token);
 				this.props.dispatchLogin(token);
 			})
 			.catch(err => {
