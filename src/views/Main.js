@@ -22,11 +22,11 @@ class Main extends Component {
 
 function mapStateToProps(state) {
 	return {
-		isLoggedIn: Boolean(state.loginCookie),
+		isLoggedIn: Boolean(state.loginToken),
 	}
 }
 
-const styles: object = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',

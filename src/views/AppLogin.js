@@ -29,8 +29,8 @@ class AppLogin extends Component {
 	}
 	validateLogin() {
 		return new Promise((res, rej) => {
-			AsyncStorage.getItem('loginCookie').then(cookie => {
-				Boolean(cookie) ? res(cookie) : rej();
+			AsyncStorage.getItem('loginToken').then(token => {
+				Boolean(token) ? res(token) : rej();
 			}).catch(rej);
 		})
 	}
@@ -41,12 +41,12 @@ class AppLogin extends Component {
 		};
 
 		authorize(creds.username, creds.password)
-			.then((token) => {
+			.then(token => {
+				console.log(token);
 				this.props.dispatchLogin(token);
 			})
 			.catch(err => {
 				console.log(err);
-
 			})
 	}
 	render() {
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 });
 
 let mapStateToProps = state => ({
-	loginCookie: state.loginCookie,
+	loginToken: state.loginToken,
 })
 let mapDispatchToProps = dispatch => ({
 	dispatchLogin: token => dispatch(login(token)),
