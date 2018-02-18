@@ -1,7 +1,6 @@
 import axios from 'axios';
 import store from './store';
-import { toBasicAuth } from './utils';
-import { apiUrl, testingMode } from './config';
+import { apiUrl } from './config';
 
 let axiosInstance = axios.create({
 	baseURL: apiUrl,
@@ -23,8 +22,9 @@ store.subscribe(() => {
 export function authorize(email, password) {
 	return new Promise((res, rej) => {
 		axios.get(apiUrl + 'auth', {
-			headers: {
-				Authorization: toBasicAuth(email, password),
+			auth: {
+				username: email,
+				password: password,
 			},
 			timeout: 5000,
 		}).then(response => {
@@ -40,7 +40,7 @@ export function getAllItems() {
 	return new Promise((res, rej) => {
 		axiosInstance.get('/items')
 			.then(response => {
-
+				res(response);
 			})
 	})
 }

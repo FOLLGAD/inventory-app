@@ -10,25 +10,17 @@ import {
 	ToastAndroid,
 } from 'react-native';
 
-import InventoryStack from '../components/InventoryStack';
-
 import { getItem } from '../api';
 
-export default class App extends Component {
+import List from './List';
+
+export default class Inventory extends Component {
 	constructor(props) {
 		super(props);
-
-		this.state = { currentItem: null };
-
-		this.handleInput = this.handleInput.bind(this);
-	}
-	handleInput(input) {
-		ToastAndroid.show(`The code is ${input}`, ToastAndroid.LONG);
-		return getItem(input)
 	}
 	render() {
 		return (
-			<InventoryStack screenProps={{ onInput: this.handleInput, item: this.state.currentItem }} />
+			<List />
 		)
 	}
 }

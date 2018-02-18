@@ -96,12 +96,6 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-    
-    allprojects {
-        repositories {
-            maven { url "https://jitpack.io" }
-        }
-    }
 
     defaultConfig {
         applicationId "com.inventoryapp"
