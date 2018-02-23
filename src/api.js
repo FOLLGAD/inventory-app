@@ -21,46 +21,69 @@ store.subscribe(() => {
 
 export function authorize(email, password) {
 	return new Promise((res, rej) => {
-		axios.get(apiUrl + 'auth', {
+		axiosInstance.get(apiUrl + 'auth', {
 			auth: {
 				username: email,
 				password: password,
 			},
 			timeout: 5000,
 		}).then(response => {
-			console.log(response)
 			res(response.data.token);
 		}).catch(err => {
+			console.log(err)
 			rej(err);
 		});
 	})
 }
 
-export function getAllItems() {
+export function getItems() {
 	return new Promise((res, rej) => {
-		axiosInstance.get('/items')
-			.then(response => {
-				res(response);
+		axiosInstance.get('/items', {
+			params: {
+				populate: true,
+			},
+		})
+			.then(({ data }) => {
+				res(data);
 			})
 	})
 }
 
-export function getList(name) {
+export function getContainers() {
 	return new Promise((res, rej) => {
+		axiosInstance.get('/containers', {
+			params: {
+				populate: true,
+			},
+		})
+			.then(({ data }) => {
+				res(data);
+			})
 	})
 }
 
 export function getItem(itemId) {
 	return new Promise((res, rej) => {
 		axiosInstance
-			.get(`/items/${itemId}`)
-			.then(res)
+			.get(`/items/${itemId}`, {
+				params: {
+					populate: true,
+				},
+			})
+			.then(({ data }) => res(data))
 			.catch(rej);
 	});
 }
 
 export function getContainer(containerId) {
 	return new Promise((res, rej) => {
-		rej()
-	})
+		axiosInstance
+			.get(`/containers/${containerId}`, {
+				params: {
+					populate: true,
+				},
+			})
+			.then(({ data }) => res(data))
+			.catch(rej);
+	});
 }

@@ -21,7 +21,6 @@ class AppLogin extends Component {
 		super(props);
 
 		this.login = this.login.bind(this);
-		this.handleInput = this.handleInput.bind(this);
 		this.validateLogin = this.validateLogin.bind(this);
 	}
 	handleInput(input) {

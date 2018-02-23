@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import { Provider } from 'react-redux';
-import Main from './src/views/Main';
+import MainView from './src/views/Main';
 
 import store from './src/store';
 
@@ -19,7 +19,7 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<Main />
+				<MainView />
 			</Provider>
 		);
 	}
