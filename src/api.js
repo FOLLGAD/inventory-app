@@ -21,7 +21,7 @@ store.subscribe(() => {
 
 export function authorize(email, password) {
 	return new Promise((res, rej) => {
-		axiosInstance.get(apiUrl + 'auth', {
+		axiosInstance.get('auth', {
 			auth: {
 				username: email,
 				password: password,

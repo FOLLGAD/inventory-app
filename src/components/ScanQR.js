@@ -1,44 +1,57 @@
-import React, { Component } from 'React';
-
+import React, { Component } from 'react';
 import {
+	AppRegistry,
+	Dimensions,
 	StyleSheet,
 	Text,
-	View,
 	TouchableOpacity,
+	View
 } from 'react-native';
 
 import { RNCamera } from 'react-native-camera';
 
-export default class ScanQR extends Component {
-	constructor(props) {
-		super(props);
-		this.onRead = this.onRead.bind(this);
-	}
-	onRead(e) {
-		this.props.activated && this.props.onSuccess(e.data)
-	}
+export default class what extends Component {
 	render() {
 		return (
-			// <View style={styles.container}>
-			<RNCamera
-				style={styles.preview}
-				onBarCodeRead={this.onRead}
-				// barCodeTypes={[Camera.constants.BarCodeType.qr]}
-				type={RNCamera.constants.Type.front}
-				aspect={RNCamera.constants.Aspect.fill}
-				ref={cam => this.camera = cam}
-			>
-			</RNCamera>
-			// {/* <Text style={styles.capture} onPress={() => console.log(this.camera)}>CAPTURE</Text> */}
-			// {/* </View> */}
-		)
+			<View style={styles.container}>
+				<RNCamera
+					ref={ref => {
+						this.camera = ref;
+					}}
+					style={styles.preview}
+					type={RNCamera.Constants.Type.front}
+					flashMode={RNCamera.Constants.FlashMode.on}
+					permissionDialogTitle={'Permission to use camera'}
+					permissionDialogMessage={'We need your permission to use your camera phone'}
+				/>
+				<View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center', }}>
+					<TouchableOpacity
+						onPress={this.takePicture.bind(this)}
+						style={styles.capture}
+					>
+						<Text style={{ fontSize: 14 }}> SNAP </Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		);
 	}
+	takePicture = async function () {
+		if (this.camera) {
+			console.log(this.camera)
+			const options = { quality: 0.5, base64: true };
+			const data = await this.camera.takePictureAsync(options)
+			console.log(data.uri);
+		}
+	};
 }
+
+
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		flexDirection: 'row',
+		flexDirection: 'column',
+		backgroundColor: 'black'
 	},
 	preview: {
 		flex: 1,
@@ -49,8 +62,9 @@ const styles = StyleSheet.create({
 		flex: 0,
 		backgroundColor: '#fff',
 		borderRadius: 5,
-		color: '#000',
-		padding: 10,
-		margin: 40
-	}
+		padding: 15,
+		paddingHorizontal: 20,
+		alignSelf: 'center',
+		margin: 20
+	},
 });
