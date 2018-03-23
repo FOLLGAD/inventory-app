@@ -5,37 +5,66 @@ import React, { Component } from 'react';
 import {
 	Platform,
 	StyleSheet,
-	Text,
 	View,
 	ToastAndroid,
+	DatePickerAndroid,
 } from 'react-native';
 
-export default class App extends Component {
-	constructor(props) {
-		super(props)
+import {
+	Icon,
+	Card,
+	CardItem,
+	Text,
+	Content,
+	Button,
+} from 'native-base';
+
+import { borrowItem } from '../api'
+
+export default class ItemScreen extends Component {
+	static navigationOptions = ({ navigation }) => {
+		let { params } = navigation.state
+		return {
+			title: params ? params.item.itemType.name : 'Artikel'
+		}
+	}
+	borrow = () => {
+		DatePickerAndroid.open({ minDate: Date.now() })
+			.then(({ year, month, day }) => {
+				let item = this.props.navigation.state.params.item
+				borrowItem({ itemId: item._id, to: new Date(year, month, day) })
+			})
 	}
 	render() {
+		let item = this.props.navigation.state.params.item
 		return (
-			<View>
-				{this.props.screenProps.item ?
-					(<View><Text><Text style={styles.bold}>Skåp:</Text> {this.props.screenProps.item.container}</Text>
-					<Text><Text style={styles.bold}>Namn:</Text> {this.props.screenProps.item.name}</Text>
-					<Text>{/* Break */}</Text>
-					{this.props.screenProps.item.properties.map(d => <Text><Text style={styles.bold}>{d.type}: </Text>{d.value}</Text>)}</View>)
-				: <Text>Loading</Text>}
+			<View style={styles.container}>
+				<Text style={styles.bigText}><Text style={styles.bold}>Skåp:</Text> {item.container ? item.container.name : "Inget skåp"}</Text>
+
+				<Text style={styles.bigText}>{/* Break */}</Text>
+
+				{item.properties.map(d => <Text key={d.propertyType.name} style={styles.bigText}><Text style={styles.bold}>{d.propertyType.name}: </Text>{d.value}</Text>)}
+
+				<Text style={styles.bigText}>{/* Break */}</Text>
+
+				<Button block onPress={this.borrow}>
+					<Text>Låna</Text>
+				</Button>
 			</View>
 		);
 	}
 }
 
-const styles: object = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
+		padding: 20,
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
 		backgroundColor: '#F5FCFF',
 	},
 	bold: {
 		fontWeight: 'bold',
 	},
+	bigText: {
+		fontSize: 18,
+	}
 });

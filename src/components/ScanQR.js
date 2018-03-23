@@ -10,7 +10,10 @@ import {
 
 import { RNCamera } from 'react-native-camera';
 
-export default class what extends Component {
+import { connect } from 'react-redux';
+import ContainerList from './ContainerList';
+
+class what extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
@@ -19,33 +22,34 @@ export default class what extends Component {
 						this.camera = ref;
 					}}
 					style={styles.preview}
-					type={RNCamera.Constants.Type.front}
-					flashMode={RNCamera.Constants.FlashMode.on}
+					type={RNCamera.Constants.Type.back}
 					permissionDialogTitle={'Permission to use camera'}
 					permissionDialogMessage={'We need your permission to use your camera phone'}
+					onBarCodeRead={this.readCode}
 				/>
-				<View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center', }}>
-					<TouchableOpacity
-						onPress={this.takePicture.bind(this)}
-						style={styles.capture}
-					>
-						<Text style={{ fontSize: 14 }}> SNAP </Text>
-					</TouchableOpacity>
-				</View>
 			</View>
 		);
 	}
-	takePicture = async function () {
-		if (this.camera) {
-			console.log(this.camera)
-			const options = { quality: 0.5, base64: true };
-			const data = await this.camera.takePictureAsync(options)
-			console.log(data.uri);
+	readCode = ({ data }) => {
+		console.log(data)
+		let itemMatch = this.props.items.find(item => item._id == data)
+		let containerMatch = this.props.containers.find(container => container._id == data)
+		console.log(itemMatch, containerMatch)
+		if (itemMatch) {
+			this.props.navigation.navigate('Item', { item: itemMatch })
+			return
 		}
-	};
+		if (containerMatch) {
+			this.props.navigation.navigate('ContainerList')
+		}
+	}
 }
 
+const mapStateToProps = ({ items, containers }) => ({
+	items, containers
+})
 
+export default connect(mapStateToProps)(what)
 
 const styles = StyleSheet.create({
 	container: {

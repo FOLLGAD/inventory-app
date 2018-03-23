@@ -7,32 +7,51 @@ import {
 	Text,
 	View,
 	FlatList,
+	TouchableOpacity,
 } from 'react-native';
+
+import {
+	Icon,
+	Card,
+	CardItem,
+	Content,
+} from 'native-base';
 
 export default class List extends Component {
 	state = {
-		data: [],
 		isRefreshing: false,
 	};
 	constructor(props) {
 		super(props);
 
 		this.fetch = this.fetch.bind(this);
+		this.renderItem = this.renderItem.bind(this);
 	}
 	fetch() {
 		this.setState({ isRefreshing: true });
 
 		this.props.onFetch()
 			.then(response => {
-				this.setState({ data: response, isRefreshing: false });
+				this.setState({ isRefreshing: false });
 			});
 	}
 	componentWillMount() {
 		this.fetch();
 	}
+	renderItem({ item }) {
+		return (
+			<CardItem key={item._id}>
+				<TouchableOpacity onPress={() => this.props.listPress && this.props.listPress(item)}>
+					{this.props.renderItem(item)}
+				</TouchableOpacity>
+			</CardItem>
+		)
+	}
 	render() {
 		return (
-			<FlatList data={this.state.data} renderItem={this.props.renderItem} refreshing={this.state.isRefreshing} onRefresh={this.fetch} />
+			<Card>
+				<FlatList data={this.props.data} renderItem={this.renderItem} refreshing={this.state.isRefreshing} onRefresh={this.fetch} />
+			</Card>
 		)
 	}
 }

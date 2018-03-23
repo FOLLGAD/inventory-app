@@ -20,32 +20,30 @@ import { connect } from 'react-redux';
 
 import List from './List';
 
-import { getItems } from '../api';
+import { getItemTypes } from '../api';
 
-import { setItems } from '../actions';
+import { setItemTypes } from '../actions';
 
-class ItemList extends Component {
+class ItemTypeList extends Component {
 	constructor(props) {
 		super(props);
-
-		this.onFetch = this.onFetch.bind(this)
 	}
 	async onFetch() {
-		let items = await getItems();
-		this.props.dispatchItems(items);
-		return items;
+		let itemTypes = await getItemTypes();
+		this.props.dispatchItemTypes(itemTypes);
+		return itemTypes;
 	}
 	componentDidMount() {
 		this.onFetch();
 	}
-	renderItem(item) {
+	renderItem(itemType) {
 		return (
 			<View>
 				<Text style={styles.header}>
-					{item.itemType ? item.itemType.name : "Okänd objekttyp"}
+					{itemType.name}
 				</Text>
 				<Text>
-					{item.container ? item.container.name : "Inget skåp"}
+					{itemType.propertyTypes.length} {itemType.propertyTypes.length === 1 ? 'attribut' : 'attributer'}
 				</Text>
 			</View>
 		)
@@ -56,17 +54,17 @@ class ItemList extends Component {
 				<Content>
 					<List
 						listPress={item => {
-							this.props.navigation.navigate('Item', { item })
+							// this.props.navigation.navigate('Item', { item })
 						}}
-						onFetch={this.onFetch}
+						onFetch={this.onFetch.bind(this)}
 						renderItem={this.renderItem}
-						data={this.props.items}
+						data={this.props.itemTypes}
 					/>
 				</Content>
 				<View>
 					<Fab
 						position='bottomRight'
-						onPress={() => this.props.navigation.navigate('NewItem')}
+						onPress={() => this.props.navigation.navigate('NewItemType')}
 					>
 						<Icon name="share" />
 					</Fab>
@@ -76,14 +74,14 @@ class ItemList extends Component {
 	}
 }
 
-const mapStateToProps = ({ items }) => ({
-	items
+const mapStateToProps = ({ itemTypes }) => ({
+	itemTypes
 })
 const mapDispatchToProps = dispatch => ({
-	dispatchItems: items => dispatch(setItems(items)),
+	dispatchItemTypes: itemTypes => dispatch(setItemTypes(itemTypes)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemList)
+export default connect(mapStateToProps, mapDispatchToProps)(ItemTypeList)
 
 const styles = StyleSheet.create({
 	container: {
