@@ -31,10 +31,8 @@ class what extends Component {
 		);
 	}
 	readCode = ({ data }) => {
-		console.log(data)
-		let itemMatch = this.props.items.find(item => item._id == data)
+		let itemMatch = this.props.items.find(item => item._id == data) || this.props.items.find(item => item.code == data)
 		let containerMatch = this.props.containers.find(container => container._id == data)
-		console.log(itemMatch, containerMatch)
 		if (itemMatch) {
 			this.props.navigation.navigate('Item', { item: itemMatch })
 			return
