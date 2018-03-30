@@ -8,3 +8,9 @@ export function toBasicAuth(user, password) {
     var hash = Base64.encode(tok);
     return 'Basic ' + hash;
 }
+
+import { ToastAndroid } from 'react-native';
+
+export function toast(message) {
+    ToastAndroid.show(message, ToastAndroid.SHORT)
+}
