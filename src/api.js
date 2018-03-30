@@ -62,6 +62,14 @@ export function getItemTypes() {
 	})
 }
 
+export function deleteItemType(itemTypeId) {
+	return new Promise((res, rej) => {
+		axiosInstance.delete(`/item-types/${itemTypeId}`)
+			.then(({ data }) => res(data))
+			.catch(rej)
+	})
+}
+
 export function getContainers() {
 	return new Promise((res, rej) => {
 		axiosInstance.get('/containers', {
@@ -75,6 +83,15 @@ export function getContainers() {
 	})
 }
 
+export function deleteContainer(containerId) {
+	return new Promise((res, rej) => {
+		axiosInstance
+			.delete(`/containers/${containerId}`)
+			.then(({ data }) => res(data))
+			.catch(rej);
+	});
+}
+
 export function getItem(itemId) {
 	return new Promise((res, rej) => {
 		axiosInstance
@@ -83,6 +100,15 @@ export function getItem(itemId) {
 					populate: true,
 				},
 			})
+			.then(({ data }) => res(data))
+			.catch(rej);
+	});
+}
+
+export function deleteItem(itemId) {
+	return new Promise((res, rej) => {
+		axiosInstance
+			.delete(`/items/${itemId}`)
 			.then(({ data }) => res(data))
 			.catch(rej);
 	});
@@ -124,7 +150,6 @@ export function borrowItem({ itemId, to }) {
 }
 
 export function createItemType({ name, propertyTypes }) {
-	console.log(propertyTypes)
 	console.assert(propertyTypes.every(pt => typeof pt.name == "string" && typeof pt.type == "string"))
 	console.assert(typeof name == "string")
 
@@ -139,12 +164,13 @@ export function createItemType({ name, propertyTypes }) {
 	})
 }
 
-export function createItem({ properties, itemType }) {
+export function createItem({ properties, itemType, container }) {
 	return new Promise((res, rej) => {
 		axiosInstance
 			.post(`/items`, {
 				properties,
 				itemType,
+				container,
 			})
 			.then(({ data }) => res(data))
 			.catch(rej)
