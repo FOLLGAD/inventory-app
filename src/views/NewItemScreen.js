@@ -70,16 +70,18 @@ class NewItemScreen extends Component {
 		this.state = {
 			itemType: null,
 			properties: [],
-			pickerIsVisible: false,
+			itemTypePickerIsVisible: false,
+			containerPickerIsVisible: false,
 		}
 	}
 	post() {
-		let { itemType, properties } = this.state
-		createItem({ itemType: itemType._id, properties }).then(() => {
+		let { itemType, properties, container } = this.state
+		createItem({ itemType: itemType._id, properties, container }).then(() => {
 			this.props.navigation.goBack()
 		})
 	}
-	pickerOnSelect = itemTypeId => {
+
+	itemTypePickerOnSelect = itemTypeId => {
 		if (this.state.itemType && itemTypeId == this.state.itemType._id) return;
 
 		let itemType = this.props.itemTypes.find(it => it._id == itemTypeId)
@@ -87,35 +89,70 @@ class NewItemScreen extends Component {
 
 		this.setState({
 			itemType,
-			pickerIsVisible: false,
+			itemTypePickerIsVisible: false,
 			properties,
 		})
 	}
-	pickerOnShow = () => {
+	itemTypePickerOnShow = () => {
 		this.setState({
-			pickerIsVisible: true,
+			itemTypePickerIsVisible: true,
 		})
 	}
-	pickerOnCancel = () => {
+	itemTypePickerOnCancel = () => {
 		this.setState({
-			pickerIsVisible: false,
+			itemTypePickerIsVisible: false,
 		})
 	}
+
+	containerPickerOnSelect = containerId => {
+		if (this.state.container && containerId == this.state.container._id) return;
+
+		let container = this.props.containers.find(cnt => cnt._id == containerId)
+
+		this.setState({
+			container,
+			containerPickerIsVisible: false,
+		})
+	}
+	containerPickerOnShow = () => {
+		this.setState({
+			containerPickerIsVisible: true,
+		})
+	}
+	containerPickerOnCancel = () => {
+		this.setState({
+			containerPickerIsVisible: false,
+		})
+	}
+
 	render() {
 		return (
 			<Container>
 				<Content>
-					<Button block small onPress={this.pickerOnShow}>
-						<Text>{this.state.itemType ? this.state.itemType.name : "Artikeltyp"}</Text>
+					<Button block small onPress={this.itemTypePickerOnShow}>
+						<Text>{this.state.itemType ? this.state.itemType.name : "Item type"}</Text>
 					</Button>
 
 					<ModalFilterPicker
-						onSelect={this.pickerOnSelect}
-						onCancel={this.pickerOnCancel}
+						onSelect={this.itemTypePickerOnSelect}
+						onCancel={this.itemTypePickerOnCancel}
 						options={this.props.itemTypes.map(itemType => ({ key: itemType._id, label: itemType.name }))}
-						visible={this.state.pickerIsVisible}
+						visible={this.state.itemTypePickerIsVisible}
 						modal={{ onRequestClose: () => { } }}
-						placeholder="Artikeltyp"
+						placeholder="Item type"
+					/>
+
+					<Button block small onPress={this.containerPickerOnShow}>
+						<Text>{this.state.container ? this.state.container.name : "Container"}</Text>
+					</Button>
+
+					<ModalFilterPicker
+						onSelect={this.containerPickerOnSelect}
+						onCancel={this.containerPickerOnCancel}
+						options={this.props.containers.map(container => ({ key: container._id, label: container.name }))}
+						visible={this.state.containerPickerIsVisible}
+						modal={{ onRequestClose: () => { } }}
+						placeholder="Container"
 					/>
 				</Content>
 
@@ -123,8 +160,6 @@ class NewItemScreen extends Component {
 					{this.state.itemType && this.state.itemType.propertyTypes.map((pt, index) => {
 						let props = this.state.properties
 						let thisProp = props[index]
-
-						console.log(thisProp)
 
 						if (pt.type == 'Boolean') {
 							return (
@@ -140,7 +175,7 @@ class NewItemScreen extends Component {
 							return (
 								<ListItem>
 									<Item floatingLabel>
-										<Input value={thisProp.value} onChangeText={e => { thisProp.value = e; console.log(e); this.setState({ properties: props }) }} />
+										<Input value={thisProp.value} onChangeText={e => { thisProp.value = e; this.setState({ properties: props }) }} />
 										<Label>{pt.name}</Label>
 									</Item>
 								</ListItem>
@@ -151,7 +186,6 @@ class NewItemScreen extends Component {
 								<ListItem>
 									<Button
 										onPress={() => {
-											console.log(thisProp)
 											let date = thisProp && thisProp.value
 											DatePickerAndroid.open({
 												date: new Date(date)
@@ -161,7 +195,7 @@ class NewItemScreen extends Component {
 											})
 										}}
 									>
-										{thisProp && thisProp.value ? <Text>{dateToString(new Date(thisProp.value))}</Text> : <Text>Välj datum</Text>}
+										{thisProp && thisProp.value ? <Text>{dateToString(new Date(thisProp.value))}</Text> : <Text>Choose a date</Text>}
 									</Button>
 									<Body>
 										<Text>{pt.name}</Text>
@@ -173,16 +207,17 @@ class NewItemScreen extends Component {
 				</Content>
 
 				<Button block primary onPress={this.post} style={styles.marginTop}>
-					<Text>Skapa</Text>
+					<Text>Create</Text>
 				</Button>
 			</Container>
 		);
 	}
 }
 
-const mapStateToProps = ({ items, itemTypes }) => ({
+const mapStateToProps = ({ items, itemTypes, containers }) => ({
 	items,
 	itemTypes,
+	containers,
 });
 
 export default connect(mapStateToProps)(NewItemScreen)

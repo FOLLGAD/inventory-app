@@ -8,7 +8,6 @@ import {
 	Text,
 	View,
 	ToastAndroid,
-	TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -16,6 +15,7 @@ import {
 	Card,
 	CardItem,
 	Content,
+	Button,
 } from 'native-base';
 
 import {
@@ -25,19 +25,25 @@ import {
 
 import { connect } from 'react-redux';
 
-import ItemList from '../components/ItemList';
-import ItemTypeList from '../components/ItemTypeList';
-import ItemScreen from '../components/ItemScreen';
-import NewItemScreen from '../components/NewItemScreen';
-import NewItemTypeScreen from '../components/NewItemTypeScreen';
-import ContainerList from '../components/ContainerList';
-import ScanQR from '../components/ScanQR';
+import ItemList from '../views/ItemList';
+import ItemScreen from '../views/ItemScreen';
+import NewItemScreen from '../views/NewItemScreen';
 
-let navOpts = (name) => ({ navigation }) => ({
+import ItemTypeList from '../views/ItemTypeList';
+import ItemTypeScreen from '../views/ItemTypeScreen';
+import NewItemTypeScreen from '../views/NewItemTypeScreen';
+
+import ContainerList from '../views/ContainerList';
+import ContainerScreen from '../views/ContainerScreen';
+import NewContainerScreen from '../views/NewContainerScreen';
+
+import ScanQR from '../views/ScanQR';
+
+let navOpts = name => ({ navigation }) => ({
 	[name ? 'title' : 'uhhhh']: name,
-	headerLeft: <Content onPress={() => navigation.navigate('DrawerOpen')}>
-		{/* <Icon name={'menu'} type={'Entypo'} fontSize={20} style={{ fontSize: 20 }} /> */}
-	</Content>
+	headerLeft: <Button iconLeft transparent onPress={() => navigation.navigate('DrawerOpen')}>
+		<Icon name='menu' />
+	</Button>
 })
 
 const ScannerStack = StackNavigator({
@@ -72,11 +78,20 @@ const ItemTypeListStack = StackNavigator({
 	NewItemType: {
 		screen: NewItemTypeScreen,
 	},
+	ItemType: {
+		screen: ItemTypeScreen,
+	},
 });
 const ContainerListStack = StackNavigator({
 	ContainerList: {
 		screen: ContainerList,
 		navigationOptions: navOpts('Containers'),
+	},
+	NewContainer: {
+		screen: NewContainerScreen,
+	},
+	Container: {
+		screen: ContainerScreen,
 	},
 });
 
@@ -96,18 +111,21 @@ const DrawerNav = DrawerNavigator({
 }, {
 		navigationOptions: ({ navigation }) => ({
 			headerTitle: <Text>Header</Text>,
-			headerLeft: <TouchableOpacity onPress={() => navigation.navigate('DrawerOpen')}><Text>Menu</Text></TouchableOpacity>,
+			headerLeft: (
+				<Button iconLeft transparent onPress={() => navigation.navigate('DrawerOpen')}>
+					<Icon name='menu' style={{ marginLeft: 18 }} />
+				</Button>
+			)
 		}),
 	});
 
-import { setContainers, setItems, setItemTypes } from '../actions'
-import { getContainers, getItems, getItemTypes } from '../api'
+import { fetchContainers, fetchItems, fetchItemTypes } from '../fetchers'
 
 class Inventory extends Component {
 	componentDidMount() {
-		getContainers().then(this.props.dispatchContainers)
-		getItems().then(this.props.dispatchItems)
-		getItemTypes().then(this.props.dispatchItemTypes)
+		fetchContainers()
+		fetchItems()
+		fetchItemTypes()
 	}
 	render() {
 		return (
@@ -116,18 +134,7 @@ class Inventory extends Component {
 	}
 }
 
-const mapDispatchToProps = dispatch => ({
-	dispatchItemTypes: data => dispatch(setItemTypes(data)),
-	dispatchItems: data => dispatch(setItems(data)),
-	dispatchContainers: data => dispatch(setContainers(data)),
-})
-
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
 });
 
-export default connect(() => ({}), mapDispatchToProps)(Inventory);
+export default connect()(Inventory);

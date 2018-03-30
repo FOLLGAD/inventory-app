@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
+
 import {
-	AppRegistry,
-	Dimensions,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
-	View
+	ToastAndroid,
 } from 'react-native';
 
 import { RNCamera } from 'react-native-camera';
 
 import { connect } from 'react-redux';
-import ContainerList from './ContainerList';
 
 class what extends Component {
 	render() {
 		return (
-			<View style={styles.container}>
 				<RNCamera
 					ref={ref => {
 						this.camera = ref;
@@ -27,24 +24,30 @@ class what extends Component {
 					permissionDialogMessage={'We need your permission to use your camera phone'}
 					onBarCodeRead={this.readCode}
 				/>
-			</View>
 		);
 	}
 	readCode = ({ data }) => {
-		let itemMatch = this.props.items.find(item => item._id == data) || this.props.items.find(item => item.code == data)
-		let containerMatch = this.props.containers.find(container => container._id == data)
+		if (!data) return
+
+		let itemMatch = this.props.items.find(item => item._id == data || item.code == data)
+		let containerMatch = this.props.containers.find(container => container._id == data || container.code == data)
+
 		if (itemMatch) {
 			this.props.navigation.navigate('Item', { item: itemMatch })
 			return
 		}
 		if (containerMatch) {
-			this.props.navigation.navigate('ContainerList')
+			this.props.navigation.navigate('Container', { container: containerMatch })
+			return
 		}
+
+		ToastAndroid.show('Could not find code in database', ToastAndroid.SHORT)
 	}
 }
 
 const mapStateToProps = ({ items, containers }) => ({
-	items, containers
+	items,
+	containers,
 })
 
 export default connect(mapStateToProps)(what)

@@ -9,7 +9,7 @@ import {
 	AppState,
 } from 'react-native';
 
-import ScanQR from './ScanQR';
+import ScanQR from '../Views/ScanQR';
 
 class ScanScreen extends Component {
 	constructor(props) {

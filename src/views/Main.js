@@ -13,9 +13,7 @@ import { connect } from 'react-redux';
 class Main extends Component {
 	render() {
 		return (
-			<View style={styles.container} >
-				{this.props.isLoggedIn ? <Inventory /> : <AppLogin />}
-			</View>
+			this.props.isLoggedIn ? <Inventory /> : <AppLogin />
 		);
 	}
 }
@@ -26,6 +24,8 @@ function mapStateToProps(state) {
 	}
 }
 
+export default connect(mapStateToProps)(Main);
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -33,5 +33,3 @@ const styles = StyleSheet.create({
 		// alignItems: 'center',
 	},
 });
-
-export default connect(mapStateToProps)(Main);

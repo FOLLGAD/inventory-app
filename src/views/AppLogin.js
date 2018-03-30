@@ -6,10 +6,13 @@ import {
 	Platform,
 	StyleSheet,
 	Text,
-	View,
 	ToastAndroid,
 	AsyncStorage,
 } from 'react-native';
+
+import {
+	Container,
+} from 'native-base';
 
 import LoginForm from '../components/LoginForm';
 import { login } from '../actions';
@@ -49,9 +52,9 @@ class AppLogin extends Component {
 	}
 	render() {
 		return (
-			<View>
+			<Container>
 				<LoginForm onSubmit={this.login} />
-			</View>
+			</Container>
 		);
 	}
 }

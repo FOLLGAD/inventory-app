@@ -15,13 +15,11 @@ import {
 	Container,
 } from 'native-base';
 
-import List from './List';
-
-import { getContainers } from '../api';
+import List from '../components/List';
 
 import { connect } from 'react-redux';
 
-import { setContainers } from '../actions';
+import { fetchContainers } from '../fetchers';
 
 class ContainerList extends Component {
 	constructor(props) {
@@ -30,9 +28,8 @@ class ContainerList extends Component {
 		this.onFetch = this.onFetch.bind(this)
 	}
 	async onFetch() {
-		let containers = await getContainers();
-		this.props.dispatchContainers(containers);
-		return containers;
+		let data = fetchContainers();
+		return data;
 	}
 	renderItem(item) {
 		return <View><Text style={styles.header}>{item.name}</Text><Text style={styles.greyText}>{item._id}</Text></View>
@@ -41,13 +38,12 @@ class ContainerList extends Component {
 		this.onFetch();
 	}
 	render() {
-		console.log(this.props.containers)
 		return (
 			<Container>
 				<Content>
 					<List
-						listPress={item => {
-							// this.props.navigation.navigate('Item', { item })
+						listPress={container => {
+							this.props.navigation.navigate('Container', { container })
 						}}
 						onFetch={this.onFetch}
 						renderItem={this.renderItem}
@@ -57,9 +53,9 @@ class ContainerList extends Component {
 				<View>
 					<Fab
 						position='bottomRight'
-					// onPress={() => this.props.navigation.navigate('NewItem')}
+						onPress={() => this.props.navigation.navigate('NewContainer')}
 					>
-						<Icon name="share" />
+						<Icon name='add' />
 					</Fab>
 				</View>
 			</Container>
@@ -70,11 +66,8 @@ class ContainerList extends Component {
 const mapStateToProps = ({ containers }) => ({
 	containers
 })
-const mapDispatchToProps = dispatch => ({
-	dispatchContainers: containers => dispatch(setContainers(containers)),
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContainerList)
+export default connect(mapStateToProps)(ContainerList)
 
 const styles = StyleSheet.create({
 	container: {

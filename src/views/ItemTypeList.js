@@ -7,6 +7,7 @@ import {
 	Text,
 	View,
 	Right,
+	TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -18,20 +19,17 @@ import {
 
 import { connect } from 'react-redux';
 
-import List from './List';
+import List from '../components/List';
 
-import { getItemTypes } from '../api';
-
-import { setItemTypes } from '../actions';
+import { fetchItemTypes } from '../fetchers'
 
 class ItemTypeList extends Component {
 	constructor(props) {
 		super(props);
 	}
 	async onFetch() {
-		let itemTypes = await getItemTypes();
-		this.props.dispatchItemTypes(itemTypes);
-		return itemTypes;
+		let data = await fetchItemTypes();
+		return data;
 	}
 	componentDidMount() {
 		this.onFetch();
@@ -43,7 +41,7 @@ class ItemTypeList extends Component {
 					{itemType.name}
 				</Text>
 				<Text>
-					{itemType.propertyTypes.length} {itemType.propertyTypes.length === 1 ? 'attribut' : 'attributer'}
+					{itemType.propertyTypes.length} {itemType.propertyTypes.length === 1 ? 'property' : 'properties'}
 				</Text>
 			</View>
 		)
@@ -53,8 +51,9 @@ class ItemTypeList extends Component {
 			<Container>
 				<Content>
 					<List
-						listPress={item => {
-							// this.props.navigation.navigate('Item', { item })
+						listPress={itemType => {
+							console.log(itemType)
+							this.props.navigation.navigate('ItemType', { itemType })
 						}}
 						onFetch={this.onFetch.bind(this)}
 						renderItem={this.renderItem}
@@ -66,7 +65,7 @@ class ItemTypeList extends Component {
 						position='bottomRight'
 						onPress={() => this.props.navigation.navigate('NewItemType')}
 					>
-						<Icon name="share" />
+						<Icon name='add' />
 					</Fab>
 				</View>
 			</Container>

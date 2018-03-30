@@ -14,15 +14,14 @@ import {
 	Content,
 	Icon,
 	Container,
+	Body,
 } from 'native-base';
 
 import { connect } from 'react-redux';
 
-import List from './List';
+import List from '../components/List';
 
-import { getItems } from '../api';
-
-import { setItems } from '../actions';
+import { fetchItems } from '../fetchers';
 
 class ItemList extends Component {
 	constructor(props) {
@@ -31,23 +30,22 @@ class ItemList extends Component {
 		this.onFetch = this.onFetch.bind(this)
 	}
 	async onFetch() {
-		let items = await getItems();
-		this.props.dispatchItems(items);
-		return items;
+		let data = await fetchItems();
+		return data;
 	}
 	componentDidMount() {
 		this.onFetch();
 	}
 	renderItem(item) {
 		return (
-			<View>
+			<Body>
 				<Text style={styles.header}>
-					{item.itemType ? item.itemType.name : "Okänd objekttyp"}
+					{item.itemType ? item.itemType.name : 'Unknown itemtype'}
 				</Text>
 				<Text>
-					{item.container ? item.container.name : "Inget skåp"}
+					{item.container ? item.container.name : 'No container'}
 				</Text>
-			</View>
+			</Body>
 		)
 	}
 	render() {
@@ -58,7 +56,7 @@ class ItemList extends Component {
 						listPress={item => {
 							this.props.navigation.navigate('Item', { item })
 						}}
-						onFetch={this.onFetch}
+						onFetch={this.onFetch.bind(this)}
 						renderItem={this.renderItem}
 						data={this.props.items}
 					/>
@@ -68,7 +66,7 @@ class ItemList extends Component {
 						position='bottomRight'
 						onPress={() => this.props.navigation.navigate('NewItem')}
 					>
-						<Icon name="share" />
+						<Icon name='add' />
 					</Fab>
 				</View>
 			</Container>
@@ -77,13 +75,10 @@ class ItemList extends Component {
 }
 
 const mapStateToProps = ({ items }) => ({
-	items
-})
-const mapDispatchToProps = dispatch => ({
-	dispatchItems: items => dispatch(setItems(items)),
+	items,
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemList)
+export default connect(mapStateToProps)(ItemList)
 
 const styles = StyleSheet.create({
 	container: {

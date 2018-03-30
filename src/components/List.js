@@ -8,6 +8,7 @@ import {
 	View,
 	FlatList,
 	TouchableOpacity,
+	RefreshControl,
 } from 'react-native';
 
 import {
@@ -15,9 +16,12 @@ import {
 	Card,
 	CardItem,
 	Content,
+	ListItem,
+	List,
+	Body,
 } from 'native-base';
 
-export default class List extends Component {
+export default class MyList extends Component {
 	state = {
 		isRefreshing: false,
 	};
@@ -36,22 +40,28 @@ export default class List extends Component {
 			});
 	}
 	componentWillMount() {
-		this.fetch();
+		this.props.onFetch && this.fetch();
 	}
-	renderItem({ item }) {
+	renderItem(item) {
 		return (
-			<CardItem key={item._id}>
-				<TouchableOpacity onPress={() => this.props.listPress && this.props.listPress(item)}>
-					{this.props.renderItem(item)}
-				</TouchableOpacity>
-			</CardItem>
+			<ListItem key={item._id} onPress={() => this.props.listPress && this.props.listPress(item)}>
+				{this.props.renderItem(item)}
+			</ListItem>
 		)
 	}
 	render() {
 		return (
-			<Card>
-				<FlatList data={this.props.data} renderItem={this.renderItem} refreshing={this.state.isRefreshing} onRefresh={this.fetch} />
-			</Card>
+			<Content refreshControl={this.props.onFetch ?
+				<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.fetch} />
+				: null}>
+				<List>
+					{
+						this.props.data.length == 0 ?
+							<Text style={styles.textComponent}>There is nothing to show</Text> :
+							this.props.data.map(this.renderItem)
+					}
+				</List>
+			</Content>
 		)
 	}
 }
@@ -61,5 +71,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	textComponent: {
+		textAlign: 'center',
+		padding: 20,
 	},
 });
