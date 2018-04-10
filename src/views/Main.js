@@ -20,7 +20,7 @@ class Main extends Component {
 
 function mapStateToProps(state) {
 	return {
-		isLoggedIn: Boolean(state.loginToken),
+		isLoggedIn: Boolean(state.login.token),
 	}
 }
 

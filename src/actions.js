@@ -1,7 +1,18 @@
-export function login(token) {
+export function login({ token, name, phone, email }) {
 	return {
 		type: 'LOGIN',
 		token,
+		name,
+		phone,
+		email,
+	}
+}
+export function setMe({ name, phone, email }) {
+	return {
+		type: 'SET_ME',
+		name,
+		phone,
+		email,
 	}
 }
 export function setItems(items) {

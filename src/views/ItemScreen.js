@@ -20,9 +20,7 @@ import {
 	Container,
 } from 'native-base';
 
-import { borrowItem } from '../api'
-
-import { deleteItem } from '../api'
+import { borrowItem, deleteItem } from '../api'
 import { fetchItems } from '../fetchers'
 
 import { toast } from '../utils'

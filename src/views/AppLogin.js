@@ -43,8 +43,9 @@ class AppLogin extends Component {
 		};
 
 		let promise = authorize(email || creds.username, password || creds.password)
-			.then(token => {
-				this.props.dispatchLogin(token);
+			.then((loginData) => {
+				this.props.dispatchLogin(loginData);
+				AsyncStorage.setItem('loginToken', loginData.token);
 			})
 			.catch(err => {
 				console.log(err);
@@ -66,10 +67,10 @@ const styles = StyleSheet.create({
 });
 
 let mapStateToProps = state => ({
-	loginToken: state.loginToken,
+	loginToken: state.login.token,
 })
 let mapDispatchToProps = dispatch => ({
-	dispatchLogin: token => dispatch(login(token)),
+	dispatchLogin: loginData => dispatch(login(loginData)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppLogin);

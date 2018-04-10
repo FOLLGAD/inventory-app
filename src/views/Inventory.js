@@ -1,5 +1,3 @@
-// @flow
-
 import React, { Component } from 'react';
 
 import {
@@ -8,6 +6,7 @@ import {
 	Text,
 	View,
 	ToastAndroid,
+	ScrollView,
 } from 'react-native';
 
 import {
@@ -21,6 +20,8 @@ import {
 import {
 	DrawerNavigator,
 	StackNavigator,
+	DrawerItems,
+	SafeAreaView,
 } from 'react-navigation';
 
 import { connect } from 'react-redux';
@@ -38,6 +39,7 @@ import ContainerScreen from '../views/ContainerScreen';
 import NewContainerScreen from '../views/NewContainerScreen';
 
 import ScanQR from '../views/ScanQR';
+import Profile from '../views/Profile';
 
 let navOpts = name => ({ navigation }) => ({
 	[name ? 'title' : 'uhhhh']: name,
@@ -108,6 +110,10 @@ const DrawerNav = DrawerNavigator({
 	ContainerList: {
 		screen: ContainerListStack,
 	},
+	Profile: {
+		screen: Profile,
+		navigationOptions: navOpts('Profile')
+	}
 }, {
 		navigationOptions: ({ navigation }) => ({
 			headerTitle: <Text>Header</Text>,
@@ -115,9 +121,19 @@ const DrawerNav = DrawerNavigator({
 				<Button iconLeft transparent onPress={() => navigation.navigate('DrawerOpen')}>
 					<Icon name='menu' style={{ marginLeft: 18 }} />
 				</Button>
-			)
+			),
 		}),
+		// contentComponent: CustomDrawerContentComponent,
 	});
+
+// const CustomDrawerContentComponent = (props) => (
+// 	<ScrollView>
+// 		<SafeAreaView style={styles.container}>
+// 			<DrawerItems {...props} />
+// 			<Text>Ayy lmao</Text>
+// 		</SafeAreaView>
+// 	</ScrollView>
+// );
 
 import { fetchContainers, fetchItems, fetchItemTypes } from '../fetchers'
 
@@ -135,6 +151,9 @@ class Inventory extends Component {
 }
 
 const styles = StyleSheet.create({
+	container: {
+		backgroundColor: 'green',
+	},
 });
 
 export default connect()(Inventory);

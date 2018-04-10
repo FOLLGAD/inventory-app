@@ -5,7 +5,7 @@ import { apiUrl } from './config';
 let axiosInstance = axios.create({
 	baseURL: apiUrl,
 	headers: {
-		token: store.getState().loginToken,
+		token: store.getState().login.token,
 	},
 });
 
@@ -14,7 +14,7 @@ store.subscribe(() => {
 	axiosInstance = axios.create({
 		baseURL: apiUrl,
 		headers: {
-			token: state.loginToken,
+			token: state.login.token,
 		},
 	});
 });
@@ -28,7 +28,7 @@ export function authorize(email, password) {
 			},
 			timeout: 5000,
 		}).then(response => {
-			res(response.data.token);
+			res(response.data);
 		}).catch(err => {
 			console.log(err)
 			rej(err);
@@ -171,6 +171,27 @@ export function createItem({ properties, itemType, container }) {
 				properties,
 				itemType,
 				container,
+			})
+			.then(({ data }) => res(data))
+			.catch(rej)
+	})
+}
+
+export function getMe() {
+	return new Promise((res, rej) => {
+		axiosInstance
+			.get('/me')
+			.then(({ data }) => res(data))
+			.catch(rej)
+	})
+}
+
+export function updateMe({ phone, name }) {
+	return new Promise((res, rej) => {
+		axiosInstance
+			.post('/me', {
+				phone,
+				name,
 			})
 			.then(({ data }) => res(data))
 			.catch(rej)
