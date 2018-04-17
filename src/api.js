@@ -30,7 +30,7 @@ export function authorize(email, password) {
 		}).then(response => {
 			res(response.data);
 		}).catch(err => {
-			console.log(err)
+			console.error(err);
 			rej(err);
 		});
 	})
