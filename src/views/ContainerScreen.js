@@ -20,6 +20,7 @@ import {
 	Button,
 	Container,
 	Body,
+	H3,
 } from 'native-base';
 
 import List from '../components/List'
@@ -56,14 +57,18 @@ class ContainerScreen extends Component {
 	}
 	renderItem(item) {
 		return (
-			<Body>
-				<Text style={styles.header}>
-					{item.itemType ? item.itemType.name : 'Unknown itemtype'}
-				</Text>
-				<Text>
-					{item.container ? item.container.name : 'No container'}
-				</Text>
-			</Body>
+			<Card>
+				<CardItem>
+					<Body>
+						<H3>
+							{item.itemType ? item.itemType.name : 'Unknown itemtype'}
+						</H3>
+						<Text>
+							{item.container ? item.container.name : 'No container'}
+						</Text>
+					</Body>
+				</CardItem>
+			</Card>
 		)
 	}
 	render() {
@@ -72,7 +77,15 @@ class ContainerScreen extends Component {
 		return (
 			<Container>
 				<Content>
-					<Text>Objects in container: {data.length}</Text>
+					<Card>
+						<CardItem>
+							<Body>
+								<Text>Objects in container: {data.length}</Text>
+							</Body>
+						</CardItem>
+					</Card>
+				</Content>
+				<Content>
 					<List listPress={item => this.props.navigation.navigate('Item', { item })} renderItem={this.renderItem} data={data} />
 				</Content>
 			</Container>
@@ -85,20 +98,3 @@ const mapStateToProps = ({ items }) => ({
 })
 
 export default connect(mapStateToProps)(ContainerScreen)
-
-const styles = StyleSheet.create({
-	container: {
-		padding: 20,
-		flex: 1,
-		backgroundColor: '#F5FCFF',
-	},
-	bold: {
-		fontWeight: 'bold',
-	},
-	bigText: {
-		fontSize: 18,
-	},
-	header: {
-		fontSize: 18,
-	},
-});

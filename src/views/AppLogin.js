@@ -3,11 +3,9 @@
 import React, { Component } from 'react';
 
 import {
-	Platform,
-	StyleSheet,
 	Text,
-	ToastAndroid,
 	AsyncStorage,
+	ToastAndroid,
 } from 'react-native';
 
 import {
@@ -16,8 +14,8 @@ import {
 
 import LoginForm from '../components/LoginForm';
 import { login } from '../actions';
-import { connect } from 'react-redux';
 import { authorize } from '../api';
+import { connect } from 'react-redux';
 
 class AppLogin extends Component {
 	constructor(props) {
@@ -45,7 +43,7 @@ class AppLogin extends Component {
 		let promise = authorize(email || creds.username, password || creds.password)
 			.then((loginData) => {
 				this.props.dispatchLogin(loginData);
-				AsyncStorage.setItem('loginToken', loginData.token);
+				AsyncStorage.setItem('loginToken', loginData.token, err => console.log(err));
 			})
 			.catch(err => {
 				console.log(err);
@@ -59,12 +57,6 @@ class AppLogin extends Component {
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-});
 
 let mapStateToProps = state => ({
 	loginToken: state.login.token,

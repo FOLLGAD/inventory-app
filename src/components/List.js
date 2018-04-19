@@ -3,22 +3,20 @@
 import React, { Component } from 'react';
 
 import {
-	StyleSheet,
-	Text,
-	View,
-	FlatList,
-	TouchableOpacity,
 	RefreshControl,
 } from 'react-native';
 
 import {
+	Text,
 	Icon,
 	Card,
 	CardItem,
+	Container,
 	Content,
 	ListItem,
 	List,
 	Body,
+	Header,
 } from 'native-base';
 
 export default class MyList extends Component {
@@ -51,29 +49,10 @@ export default class MyList extends Component {
 	}
 	render() {
 		return (
-			<Content refreshControl={this.props.onFetch ?
-				<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.fetch} />
-				: null}>
-				<List>
-					{
-						this.props.data.length == 0 ?
-							<Text style={styles.textComponent}>There is nothing to show</Text> :
-							this.props.data.map(this.renderItem)
-					}
-				</List>
-			</Content>
+			<List
+				dataArray={this.props.data}
+				renderRow={this.renderItem}>
+			</List>
 		)
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	textComponent: {
-		textAlign: 'center',
-		padding: 20,
-	},
-});

@@ -129,7 +129,7 @@ class NewItemScreen extends Component {
 		return (
 			<Container>
 				<Content>
-					<Button block small onPress={this.itemTypePickerOnShow}>
+					<Button full small onPress={this.itemTypePickerOnShow}>
 						<Text>{this.state.itemType ? this.state.itemType.name : "Item type"}</Text>
 					</Button>
 
@@ -142,7 +142,7 @@ class NewItemScreen extends Component {
 						placeholder="Item type"
 					/>
 
-					<Button block small onPress={this.containerPickerOnShow}>
+					<Button full small onPress={this.containerPickerOnShow}>
 						<Text>{this.state.container ? this.state.container.name : "Container"}</Text>
 					</Button>
 
@@ -206,7 +206,7 @@ class NewItemScreen extends Component {
 					})}
 				</Content>
 
-				<Button block primary onPress={this.post} style={styles.marginTop}>
+				<Button full primary onPress={this.post} style={styles.marginTop}>
 					<Text>Create</Text>
 				</Button>
 			</Container>

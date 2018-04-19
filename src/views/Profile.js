@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 
 import {
-	StyleSheet,
-	Text,
-} from 'react-native';
-
-import {
 	Button,
 	Icon,
 	Form,
+	Text,
 	Input,
 	Item,
 	Label,
 	Content,
 	Container,
 	Header,
+	Card,
+	CardItem,
+	Spinner,
 } from 'native-base';
 
 import { connect } from 'react-redux';
@@ -27,7 +26,7 @@ class Profile extends Component {
 	static navigationOptions = ({ navigation }) => {
 		let { params } = navigation.state
 		return {
-			title: 'Edit profile',
+			title: 'My profile',
 			headerRight: (
 				<Button iconRight onLongPress={() => toast('Save')} transparent onPress={() => {
 					updateMe({ phone: this.state.phone, name: this.state.name })
@@ -41,6 +40,7 @@ class Profile extends Component {
 		super(props)
 
 		this.state = {
+			updating: false,
 			phone: this.props.phone || '',
 			name: {
 				first: (this.props.name && this.props.name.first) || '',
@@ -66,35 +66,45 @@ class Profile extends Component {
 		this.setState({ name })
 	}
 	save = () => {
+		this.setState({ updating: true })
 		updateMe({ phone: this.state.phone, name: this.state.name })
+			.then(() => {
+				this.setState({ updating: false })
+			})
+			.catch(console.error)
 	}
 	render() {
 		return (
 			<Container>
-				<Header>
-				</Header>
+				{/* <Header /> */}
 				<Content>
-					<Form>
-						<Item floatingLabel>
-							<Label>E-post</Label>
-							<Input type="email" value={this.props.email} disabled />
-						</Item>
-						<Item floatingLabel>
-							<Label>Telefon</Label>
-							<Input type="phone" value={this.state.phone} onChangeText={this.changePhone} />
-						</Item>
-						<Item floatingLabel>
-							<Label>Förnamn</Label>
-							<Input type="text" value={this.state.name.first} onChangeText={this.changeNameFirst} />
-						</Item>
-						<Item floatingLabel>
-							<Label>Efternamn</Label>
-							<Input type="text" value={this.state.name.last} onChangeText={this.changeNameLast} />
-						</Item>
-						<Button primary onPress={this.save}>
-							<Text>Hey</Text>
-						</Button>
-					</Form>
+					<Card>
+						<Form>
+							<Item floatingLabel>
+								<Label>E-post</Label>
+								<Input type="email" value={this.props.email} disabled />
+							</Item>
+							<Item floatingLabel>
+								<Label>Telefon</Label>
+								<Input type="phone" value={this.state.phone} onChangeText={this.changePhone} />
+							</Item>
+							<Item floatingLabel>
+								<Label>Förnamn</Label>
+								<Input type="text" value={this.state.name.first} onChangeText={this.changeNameFirst} />
+							</Item>
+							<Item floatingLabel>
+								<Label>Efternamn</Label>
+								<Input type="text" value={this.state.name.last} onChangeText={this.changeNameLast} />
+							</Item>
+
+							<CardItem>
+								<Button full onPress={this.save}>
+									{this.state.updating && <Spinner />}
+									<Text>Spara</Text>
+								</Button>
+							</CardItem>
+						</Form>
+					</Card>
 				</Content>
 			</Container>
 		);

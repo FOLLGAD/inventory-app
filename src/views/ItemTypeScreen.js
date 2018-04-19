@@ -52,24 +52,22 @@ export default class ItemTypeScreen extends Component {
 		let itemType = this.props.navigation.state.params.itemType
 		return (
 			<Container>
-				{itemType.propertyTypes.map(d => (
-					<Text style={styles.bigText}>
-						<Text style={styles.bold}>
-							{d.name}:
-						</Text> {d.type}
-					</Text>
-				))}
+				<Content>
+					<Card>
+						<Text></Text>
+						{itemType.propertyTypes.map(d => (
+							<CardItem>
+								<Text style={styles.bold}>{d.name}: </Text><Text style={styles.bigText}>{d.type}</Text>
+							</CardItem>
+						))}
+					</Card>
+				</Content>
 			</Container>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {
-		padding: 20,
-		flex: 1,
-		backgroundColor: '#F5FCFF',
-	},
 	bold: {
 		fontWeight: 'bold',
 	},

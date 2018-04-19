@@ -112,7 +112,6 @@ const DrawerNav = DrawerNavigator({
 	},
 	Profile: {
 		screen: Profile,
-		navigationOptions: navOpts('Profile')
 	}
 }, {
 		navigationOptions: ({ navigation }) => ({

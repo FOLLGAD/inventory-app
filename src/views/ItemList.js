@@ -4,17 +4,19 @@ import React, { Component } from 'react';
 
 import {
 	StyleSheet,
-	Text,
 	View,
 	Right,
+	RefreshControl,
+	Text,
 } from 'react-native';
 
 import {
 	Fab,
 	Content,
+	Card,
+	CardItem,
 	Icon,
 	Container,
-	Body,
 } from 'native-base';
 
 import { connect } from 'react-redux';
@@ -27,10 +29,12 @@ class ItemList extends Component {
 	constructor(props) {
 		super(props);
 
-		this.onFetch = this.onFetch.bind(this)
+		this.state = { isRefreshing: false };
 	}
-	async onFetch() {
+	onFetch = async () => {
+		this.setState({ isRefreshing: true })
 		let data = await fetchItems();
+		this.setState({ isRefreshing: false })
 		return data;
 	}
 	componentDidMount() {
@@ -38,28 +42,30 @@ class ItemList extends Component {
 	}
 	renderItem(item) {
 		return (
-			<Body>
+			<View>
 				<Text style={styles.header}>
-					{item.itemType ? item.itemType.name : 'Unknown itemtype'}
+					{item.itemType ? item.itemType.name : 'Okänd artikeltyp'}
 				</Text>
-				<Text>
-					{item.container ? item.container.name : 'No container'}
+				<Text style={styles.body}>
+					{item.container ? item.container.name : 'Inget skåp'}
 				</Text>
-			</Body>
+			</View>
 		)
 	}
 	render() {
 		return (
 			<Container>
-				<Content>
-					<List
-						listPress={item => {
-							this.props.navigation.navigate('Item', { item })
-						}}
-						onFetch={this.onFetch.bind(this)}
-						renderItem={this.renderItem}
-						data={this.props.items}
-					/>
+				<Content refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.onFetch} />}>
+					<Card>
+						<List
+							listPress={item => {
+								this.props.navigation.navigate('Item', { item })
+							}}
+							onFetch={this.onFetch.bind(this)}
+							renderItem={this.renderItem}
+							data={this.props.items}
+						/>
+					</Card>
 				</Content>
 				<View>
 					<Fab
@@ -88,5 +94,9 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		fontSize: 18,
+		color: '#555',
+	},
+	body: {
+		color: '#555',
 	},
 });

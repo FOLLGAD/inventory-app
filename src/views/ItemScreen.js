@@ -56,20 +56,28 @@ export default class ItemScreen extends Component {
 	render() {
 		let item = this.props.navigation.state.params.item
 		return (
-			<Container style={styles.container}>
-				<Text style={styles.bigText}><Text style={styles.bold}>Container:</Text> {item.container ? item.container.name : 'No container'}</Text>
-
-				{item.properties.map(d => (console.log(d),
-					<Text key={d.propertyType.name} style={styles.bigText}>
-						<Text style={styles.bold}>{d.propertyType.name}: </Text>
-						{d.value}
-					</Text>
-				))}
-
+			<Container>
 				<Content>
-					<Button block onPress={this.borrow}>
-						<Text>Borrow</Text>
-					</Button>
+					<Card>
+						<CardItem>
+							<Text style={styles.bigText}><Text style={styles.bold}>Container:</Text> {item.container ? item.container.name : 'No container'}</Text>
+						</CardItem>
+
+						{item.properties.map(d => (
+							<CardItem>
+								<Text key={d.propertyType.name} style={styles.bigText}>
+									<Text style={styles.bold}>{d.propertyType.name}: </Text>
+									{d.value}
+								</Text>
+							</CardItem>
+						))}
+
+						<CardItem>
+							<Button block onPress={this.borrow}>
+								<Text>Borrow</Text>
+							</Button>
+						</CardItem>
+					</Card>
 				</Content>
 			</Container>
 		);
