@@ -59,7 +59,7 @@ export default class ItemScreen extends Component {
 			<Container>
 				<Content>
 					<Card>
-						<CardItem>
+						<CardItem button onPress={() => this.props.navigation.navigate('Container', { container: item.container })}>
 							<Text style={styles.bigText}><Text style={styles.bold}>Container:</Text> {item.container ? item.container.name : 'No container'}</Text>
 						</CardItem>
 

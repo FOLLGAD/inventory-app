@@ -4,13 +4,17 @@ import React, { Component } from 'react';
 
 import {
 	StyleSheet,
-	Text,
 	View,
+	Right,
+	RefreshControl,
+	Text,
 } from 'react-native';
 
 import {
 	Fab,
 	Content,
+	Card,
+	CardItem,
 	Icon,
 	Container,
 } from 'native-base';
@@ -25,33 +29,43 @@ class ContainerList extends Component {
 	constructor(props) {
 		super(props);
 
-		this.onFetch = this.onFetch.bind(this)
+		this.state = { isRefreshing: false };
 	}
-	async onFetch() {
-		let data = fetchContainers();
+	onFetch = async () => {
+		this.setState({ isRefreshing: true })
+		let data = await fetchContainers();
+		this.setState({ isRefreshing: false })
 		return data;
-	}
-	renderItem(item) {
-		return <View><Text style={styles.header}>{item.name}</Text><Text style={styles.greyText}>{item._id}</Text></View>
 	}
 	componentDidMount() {
 		this.onFetch();
 	}
+	renderItem(item) {
+		return (
+			<View>
+				<Text style={styles.header}>{item.name || "Unnamed container"}</Text>
+				<Text style={styles.greyText}>{item._id}</Text>
+			</View>
+		)
+	}
 	render() {
 		return (
 			<Container>
-				<Content>
-					<List
-						listPress={container => {
-							this.props.navigation.navigate('Container', { container })
-						}}
-						onFetch={this.onFetch}
-						renderItem={this.renderItem}
-						data={this.props.containers}
-					/>
+				<Content refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.onFetch} />}>
+					<Card>
+						<List
+							listPress={container => {
+								this.props.navigation.navigate('Container', { container })
+							}}
+							onFetch={this.onFetch}
+							renderItem={this.renderItem}
+							data={this.props.containers}
+						/>
+					</Card>
 				</Content>
 				<View>
 					<Fab
+						style={{ backgroundColor: "#ce4848" }}
 						position='bottomRight'
 						onPress={() => this.props.navigation.navigate('NewContainer')}
 					>

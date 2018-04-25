@@ -73,6 +73,7 @@ class ItemTypeList extends Component {
 				</Content>
 				<View>
 					<Fab
+						style={{ backgroundColor: "#ce4848" }}
 						position='bottomRight'
 						onPress={() => this.props.navigation.navigate('NewItemType')}
 					>

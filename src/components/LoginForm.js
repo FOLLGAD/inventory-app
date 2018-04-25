@@ -2,11 +2,17 @@ import React, { Component } from 'React';
 
 import {
 	StyleSheet,
-	Text,
 	TextInput,
 	View,
-	Button,
+	Image,
 } from 'react-native';
+
+import {
+	Text,
+	Button,
+	Container,
+	Content,
+} from 'native-base'
 
 export default class LoginForm extends Component {
 	constructor(props) {
@@ -15,28 +21,38 @@ export default class LoginForm extends Component {
 	}
 	render() {
 		return (
-			<View>
-				<TextInput
-					type="text"
-					placeholder="Email address"
-					autoFocus={true}
-					onChangeText={(email) => this.setState({ email })}
-					value={this.state.email}
-				/>
-				<TextInput
-					type="password"
-					placeholder="Password"
-					onChangeText={(password) => this.setState({ password })}
-					value={this.state.password}
-					secureTextEntry={true}
-				/>
-				<Button
-					onPress={() => this.props.onSubmit(this.state.email, this.state.password)}
-					title="Log in"
-					color="#841584"
-					// disabled={this.state.email.length === 0 || this.state.password.length === 0}
-				/>
-			</View>
+			<Container style={{ margin: 10 }}>
+				<Content contentContainerStyle={{ display: "flex", alignItems: "center" }}>
+
+					<Image
+						style={{ width: 200, height: 200 }}
+						source={require("../logo.png")} />
+
+					<TextInput
+						type="text"
+						placeholder="Email address"
+						autoFocus={true}
+						onChangeText={(email) => this.setState({ email })}
+						value={this.state.email}
+						width="100%"
+					/>
+					<TextInput
+						type="password"
+						placeholder="Password"
+						onChangeText={(password) => this.setState({ password })}
+						value={this.state.password}
+						secureTextEntry={true}
+						width="100%"
+					/>
+					<Button
+						onPress={() => this.props.onSubmit(this.state.email, this.state.password)}
+						primary
+						rounded
+						full
+					>
+						<Text>Log in</Text></Button>
+				</Content>
+			</Container>
 		)
 	}
 }

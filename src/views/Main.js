@@ -7,7 +7,11 @@ import {
 
 import {
 	Root,
+	StyleProvider,
 } from 'native-base';
+
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
 
 import AppLogin from './AppLogin';
 import Inventory from './Inventory';
@@ -18,7 +22,9 @@ class Main extends Component {
 	render() {
 		return (
 			<Root>
-				{this.props.isLoggedIn ? <Inventory /> : <AppLogin />}
+				<StyleProvider style={getTheme(material)}>
+					{this.props.isLoggedIn ? <Inventory /> : <AppLogin />}
+				</StyleProvider>
 			</Root>
 		);
 	}

@@ -14,16 +14,16 @@ import { connect } from 'react-redux';
 class what extends Component {
 	render() {
 		return (
-				<RNCamera
-					ref={ref => {
-						this.camera = ref;
-					}}
-					style={styles.preview}
-					type={RNCamera.Constants.Type.back}
-					permissionDialogTitle={'Permission to use camera'}
-					permissionDialogMessage={'We need your permission to use your camera phone'}
-					onBarCodeRead={this.readCode}
-				/>
+			<RNCamera
+				ref={ref => {
+					this.camera = ref;
+				}}
+				style={styles.preview}
+				type={RNCamera.Constants.Type.back}
+				permissionDialogTitle={'Permission to use camera'}
+				permissionDialogMessage={'We need your permission to use your camera phone'}
+				onBarCodeRead={this.readCode}
+			/>
 		);
 	}
 	readCode = ({ data }) => {

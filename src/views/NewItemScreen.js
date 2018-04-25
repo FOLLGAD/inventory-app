@@ -33,9 +33,12 @@ import {
 	Body,
 	Header,
 	List,
+	H2,
 } from 'native-base';
 
 import { connect } from 'react-redux';
+
+import { fetchItems } from '../fetchers';
 
 import ModalFilterPicker from 'react-native-modal-filter-picker'
 
@@ -78,6 +81,7 @@ class NewItemScreen extends Component {
 		let { itemType, properties, container } = this.state
 		createItem({ itemType: itemType._id, properties, container }).then(() => {
 			this.props.navigation.goBack()
+			fetchItems();
 		})
 	}
 
@@ -129,87 +133,93 @@ class NewItemScreen extends Component {
 		return (
 			<Container>
 				<Content>
-					<Button full small onPress={this.itemTypePickerOnShow}>
-						<Text>{this.state.itemType ? this.state.itemType.name : "Item type"}</Text>
-					</Button>
+					<Card style={{ flexDirection: "column", flex: 1 }}>
+						<CardItem>
+							<Button block small bordered onPress={this.itemTypePickerOnShow}>
+								<Text>{this.state.itemType ? this.state.itemType.name : "Item type"}</Text>
+							</Button>
+						</CardItem>
 
-					<ModalFilterPicker
-						onSelect={this.itemTypePickerOnSelect}
-						onCancel={this.itemTypePickerOnCancel}
-						options={this.props.itemTypes.map(itemType => ({ key: itemType._id, label: itemType.name }))}
-						visible={this.state.itemTypePickerIsVisible}
-						modal={{ onRequestClose: () => { } }}
-						placeholder="Item type"
-					/>
+						<ModalFilterPicker
+							onSelect={this.itemTypePickerOnSelect}
+							onCancel={this.itemTypePickerOnCancel}
+							options={this.props.itemTypes.map(itemType => ({ key: itemType._id, label: itemType.name }))}
+							visible={this.state.itemTypePickerIsVisible}
+							modal={{ onRequestClose: () => { } }}
+							placeholder="Item type"
+						/>
 
-					<Button full small onPress={this.containerPickerOnShow}>
-						<Text>{this.state.container ? this.state.container.name : "Container"}</Text>
-					</Button>
+						<CardItem bordered>
+							<Button block small bordered onPress={this.containerPickerOnShow}>
+								<Text>{this.state.container ? this.state.container.name : "Container"}</Text>
+							</Button>
+						</CardItem>
 
-					<ModalFilterPicker
-						onSelect={this.containerPickerOnSelect}
-						onCancel={this.containerPickerOnCancel}
-						options={this.props.containers.map(container => ({ key: container._id, label: container.name }))}
-						visible={this.state.containerPickerIsVisible}
-						modal={{ onRequestClose: () => { } }}
-						placeholder="Container"
-					/>
-				</Content>
+						<ModalFilterPicker
+							onSelect={this.containerPickerOnSelect}
+							onCancel={this.containerPickerOnCancel}
+							options={this.props.containers.map(container => ({ key: container._id, label: container.name }))}
+							visible={this.state.containerPickerIsVisible}
+							modal={{ onRequestClose: () => { } }}
+							placeholder="Container"
+						/>
 
-				<Content>
-					{this.state.itemType && this.state.itemType.propertyTypes.map((pt, index) => {
-						let props = this.state.properties
-						let thisProp = props[index]
+						<Body style={{ marginTop: 10 }}>
+							<H2>Properties</H2>
+						</Body>
 
-						if (pt.type == 'Boolean') {
-							return (
-								<ListItem>
-									<CheckBox checked={Boolean(thisProp.value)} onPress={() => (thisProp.value = !thisProp.value, this.setState({ properties: props }))} />
-									<Body>
+						{this.state.itemType && this.state.itemType.propertyTypes.map((pt, index) => {
+							let props = this.state.properties
+							let thisProp = props[index]
+
+							if (pt.type == 'Boolean') {
+								return (
+									<ListItem>
+										<CheckBox checked={Boolean(thisProp.value)} onPress={() => (thisProp.value = !thisProp.value, this.setState({ properties: props }))} />
 										<Text>{pt.name}</Text>
-									</Body>
-								</ListItem>
-							)
-						}
-						if (pt.type == 'Number' || pt.type == 'String') {
-							return (
-								<ListItem>
-									<Item floatingLabel>
-										<Input value={thisProp.value} onChangeText={e => { thisProp.value = e; this.setState({ properties: props }) }} />
-										<Label>{pt.name}</Label>
-									</Item>
-								</ListItem>
-							)
-						}
-						if (pt.type == 'Date') {
-							return (
-								<ListItem>
-									<Button
-										onPress={() => {
-											let date = thisProp && thisProp.value
-											DatePickerAndroid.open({
-												date: new Date(date)
-											}).then(({ action, year, month, day }) => {
-												thisProp.value = (new Date(year, month, day)).toString()
-												this.setState({ properties: props })
-											})
-										}}
-									>
-										{thisProp && thisProp.value ? <Text>{dateToString(new Date(thisProp.value))}</Text> : <Text>Choose a date</Text>}
-									</Button>
-									<Body>
-										<Text>{pt.name}</Text>
-									</Body>
-								</ListItem>
-							)
-						}
-					})}
-				</Content>
+									</ListItem>
+								)
+							}
+							if (pt.type == 'Number' || pt.type == 'String') {
+								return (
+									<ListItem>
+										<Item floatingLabel>
+											<Input value={thisProp.value} onChangeText={e => { thisProp.value = e; this.setState({ properties: props }) }} />
+											<Label>{pt.name}</Label>
+										</Item>
+									</ListItem>
+								)
+							}
+							if (pt.type == 'Date') {
+								return (
+									<ListItem>
+										<Text style={{ marginRight: 10 }}>{pt.name}:</Text>
+										<Button
+											onPress={() => {
+												let date = thisProp && thisProp.value
+												DatePickerAndroid.open({
+													date: new Date(date)
+												}).then(({ action, year, month, day }) => {
+													thisProp.value = (new Date(year, month, day)).toString()
+													this.setState({ properties: props })
+												})
+											}}
+										>
+											{thisProp && thisProp.value ? <Text>{dateToString(new Date(thisProp.value))}</Text> : <Text>Choose a date</Text>}
+										</Button>
+									</ListItem>
+								)
+							}
+						})}
 
-				<Button full primary onPress={this.post} style={styles.marginTop}>
-					<Text>Create</Text>
-				</Button>
-			</Container>
+						<CardItem bordered>
+							<Button full primary onPress={this.post}>
+								<Text>Create</Text>
+							</Button>
+						</CardItem>
+					</Card>
+				</Content>
+			</Container >
 		);
 	}
 }
@@ -223,46 +233,4 @@ const mapStateToProps = ({ items, itemTypes, containers }) => ({
 export default connect(mapStateToProps)(NewItemScreen)
 
 const styles = StyleSheet.create({
-	container: {
-		padding: 20,
-		flex: 1,
-		backgroundColor: '#F5FCFF',
-	},
-	borderTop: {
-		borderStyle: 'solid',
-		borderBottomColor: '#eee',
-		borderBottomWidth: 1,
-	},
-	marginTop: {
-		marginTop: 30,
-	},
-	bold: {
-		fontWeight: 'bold',
-	},
-	propItem: {
-		display: 'flex',
-		padding: 0,
-		marginLeft: 10,
-		marginRight: 10,
-	},
-	propPicker: {
-		display: 'flex',
-		padding: 0,
-		marginLeft: 10,
-		marginRight: 10,
-	},
-	header: {
-		fontSize: 16,
-		marginBottom: 10,
-		marginLeft: 10,
-	},
-	bigText: {
-		fontSize: 20,
-		// textAlign: 'center',
-	},
-	propType: {
-		borderStyle: 'solid',
-		borderWidth: 1,
-		borderColor: '#eee',
-	},
 });

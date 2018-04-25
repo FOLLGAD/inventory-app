@@ -17,6 +17,7 @@ import {
 	CardItem,
 	Icon,
 	Container,
+	Body,
 } from 'native-base';
 
 import { connect } from 'react-redux';
@@ -42,14 +43,19 @@ class ItemList extends Component {
 	}
 	renderItem(item) {
 		return (
-			<View>
-				<Text style={styles.header}>
-					{item.itemType ? item.itemType.name : 'Okänd artikeltyp'}
-				</Text>
-				<Text style={styles.body}>
+			<Body>
+				<View style={{ display: "flex", justifyContent: "space-between", flexDirection: "row" }}>
+					<Text style={styles.header}>
+						{item.itemType ? item.itemType.name : 'Okänd artikeltyp'}
+					</Text>
+					<Text style={{ textAlign: "right" }}>
+						{item.code}
+					</Text>
+				</View>
+				<Text>
 					{item.container ? item.container.name : 'Inget skåp'}
 				</Text>
-			</View>
+			</Body>
 		)
 	}
 	render() {
@@ -61,7 +67,7 @@ class ItemList extends Component {
 							listPress={item => {
 								this.props.navigation.navigate('Item', { item })
 							}}
-							onFetch={this.onFetch.bind(this)}
+							onFetch={this.onFetch}
 							renderItem={this.renderItem}
 							data={this.props.items}
 						/>
@@ -69,6 +75,7 @@ class ItemList extends Component {
 				</Content>
 				<View>
 					<Fab
+						style={{ backgroundColor: "#ce4848" }}
 						position='bottomRight'
 						onPress={() => this.props.navigation.navigate('NewItem')}
 					>

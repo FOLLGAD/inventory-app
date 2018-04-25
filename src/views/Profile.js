@@ -14,6 +14,8 @@ import {
 	Card,
 	CardItem,
 	Spinner,
+	H1,
+	Body,
 } from 'native-base';
 
 import { connect } from 'react-redux';
@@ -70,37 +72,40 @@ class Profile extends Component {
 		updateMe({ phone: this.state.phone, name: this.state.name })
 			.then(() => {
 				this.setState({ updating: false })
+				this.props.navigation.navigate('Scanner')
 			})
 			.catch(console.error)
 	}
 	render() {
 		return (
 			<Container>
-				{/* <Header /> */}
 				<Content>
 					<Card>
+						<Body style={{ paddingTop: 10 }}>
+							<H1>My profile</H1>
+						</Body>
 						<Form>
-							<Item floatingLabel>
-								<Label>E-post</Label>
+							<Item>
+								<Label>Email</Label>
 								<Input type="email" value={this.props.email} disabled />
 							</Item>
-							<Item floatingLabel>
-								<Label>Telefon</Label>
+							<Item>
+								<Label>Phone</Label>
 								<Input type="phone" value={this.state.phone} onChangeText={this.changePhone} />
 							</Item>
-							<Item floatingLabel>
-								<Label>Förnamn</Label>
+							<Item>
+								<Label>First name</Label>
 								<Input type="text" value={this.state.name.first} onChangeText={this.changeNameFirst} />
 							</Item>
-							<Item floatingLabel>
-								<Label>Efternamn</Label>
+							<Item>
+								<Label>Last name</Label>
 								<Input type="text" value={this.state.name.last} onChangeText={this.changeNameLast} />
 							</Item>
 
 							<CardItem>
-								<Button full onPress={this.save}>
+								<Button full iconRight onPress={this.save}>
+									<Text>Save</Text>
 									{this.state.updating && <Spinner />}
-									<Text>Spara</Text>
 								</Button>
 							</CardItem>
 						</Form>

@@ -26,6 +26,7 @@ import {
 	Left,
 	Right,
 	Container,
+	Body,
 } from 'native-base';
 
 // Acceptable ObjectTypes with names
@@ -61,7 +62,7 @@ export default class NewItemTypeScreen extends Component {
 	}
 	addProperty() {
 		let newProps = this.state.propertyTypes
-		newProps.push({ name: '', type: 'String' })
+		newProps.push({ name: '', type: undefined })
 		this.setState({ propertyTypes: newProps })
 	}
 	removeProperty(i) {
@@ -71,57 +72,62 @@ export default class NewItemTypeScreen extends Component {
 	}
 	render() {
 		let createPropTypInp = (propType, i, array) => (
-			<View key={i} style={styles.propType}>
-				<Item regular style={styles.propItem}>
-					<Input onChangeText={e => {
-						array[i].name = e
-						console.log(e)
-						this.setState({ propertyTypes: array })
-					}}
-						value={propType.name}
-						placeholder="Name"
-					/>
-				</Item>
+			<CardItem bordered key={i}>
+				<Form style={{ width: "100%" }}>
+					<Item regular>
+						<Input onChangeText={e => {
+							array[i].name = e
+							this.setState({ propertyTypes: array })
+						}}
+							value={propType.name}
+							placeholder="Name"
+						/>
+					</Item>
+					<View>
+						<Picker
+							selectedValue={propType.type}
+							onValueChange={d => (propType.type = d, this.setState({ propertyTypes: this.state.propertyTypes }))}
+							placeholder="Property type"
+						>
+							<Picker.Item label="Choose a type" value={false} />
+							{Object.keys(ObjectTypes)
+								.map(ot => <Picker.Item label={ObjectTypes[ot]} key={ot} value={ot} />)}
+						</Picker>
+					</View>
 
-				<Picker
-					style={styles.propPicker}
-					selectedValue={propType.type}
-					onValueChange={d => (propType.type = d, this.setState({ propertyTypes: this.state.propertyTypes }))}
-					placeholder="Property type"
-				>
-					{Object.keys(ObjectTypes)
-						.map(ot => <Picker.Item label={ObjectTypes[ot]} key={ot} value={ot} />)}
-				</Picker>
-
-				<Button small transparent danger onPress={() => this.removeProperty(i)}>
-					<Text>Delete</Text>
-				</Button>
-			</View>
+					<Button iconLeft block small transparent danger onPress={() => this.removeProperty(i)}>
+						<Icon name="trash" />
+						<Text>Delete</Text>
+					</Button>
+				</Form>
+			</CardItem>
 		)
 
 		return (
 			<Container style={styles.container}>
 				<Content>
-					<Form>
-						<Item underline>
-							<Input
-								style={styles.bigText}
-								onChangeText={text => this.setState({ name: text })}
-								value={this.state.name}
-								placeholder="Name"
-							/>
-						</Item>
+					<Item>
+						<Input
+							style={styles.bigText}
+							onChangeText={text => this.setState({ name: text })}
+							value={this.state.name}
+							placeholder="Name"
+						/>
+					</Item>
 
-						{this.state.propertyTypes.map(createPropTypInp)}
+					{this.state.propertyTypes.length ?
+						<Card>
+							{this.state.propertyTypes.map(createPropTypInp)}
+						</Card> : null}
 
-						<Button block transparent secondary onPress={this.addProperty}>
-							<Text>New property</Text>
-						</Button>
+					<Button iconLeft block transparent secondary onPress={this.addProperty}>
+						<Icon name="add" />
+						<Text>New property</Text>
+					</Button>
 
-						<Button block primary onPress={this.post}>
-							<Text>Create</Text>
-						</Button>
-					</Form>
+					<Button block primary onPress={this.post}>
+						<Text>Create item type</Text>
+					</Button>
 				</Content>
 			</Container>
 		);
@@ -130,9 +136,8 @@ export default class NewItemTypeScreen extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		// padding: 20,
-		padding: 10,
-		// flex: 1,
+		paddingLeft: 10,
+		paddingRight: 10,
 		backgroundColor: '#F5FCFF',
 	},
 	bold: {

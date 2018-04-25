@@ -57,18 +57,16 @@ class ContainerScreen extends Component {
 	}
 	renderItem(item) {
 		return (
-			<Card>
-				<CardItem>
-					<Body>
-						<H3>
-							{item.itemType ? item.itemType.name : 'Unknown itemtype'}
-						</H3>
-						<Text>
-							{item.container ? item.container.name : 'No container'}
-						</Text>
-					</Body>
-				</CardItem>
-			</Card>
+			<CardItem>
+				<Body>
+					<H3>
+						{item.itemType ? item.itemType.name : 'Unknown itemtype'}
+					</H3>
+					<Text>
+						{item.code}
+					</Text>
+				</Body>
+			</CardItem>
 		)
 	}
 	render() {
@@ -84,9 +82,9 @@ class ContainerScreen extends Component {
 							</Body>
 						</CardItem>
 					</Card>
-				</Content>
-				<Content>
-					<List listPress={item => this.props.navigation.navigate('Item', { item })} renderItem={this.renderItem} data={data} />
+					<Card>
+						<List listPress={item => this.props.navigation.navigate('Item', { item })} renderItem={this.renderItem} data={data} />
+					</Card>
 				</Content>
 			</Container>
 		);
