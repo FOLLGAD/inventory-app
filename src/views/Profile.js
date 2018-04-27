@@ -24,6 +24,8 @@ import { updateMe } from '../api'
 
 import { toast } from '../utils'
 
+import { fetchMe } from '../fetchers'
+
 class Profile extends Component {
 	static navigationOptions = ({ navigation }) => {
 		let { params } = navigation.state
@@ -73,8 +75,12 @@ class Profile extends Component {
 			.then(() => {
 				this.setState({ updating: false })
 				this.props.navigation.navigate('Scanner')
+				fetchMe();
 			})
 			.catch(console.error)
+	}
+	componentWillMount() {
+		fetchMe()
 	}
 	render() {
 		return (
@@ -102,12 +108,12 @@ class Profile extends Component {
 								<Input type="text" value={this.state.name.last} onChangeText={this.changeNameLast} />
 							</Item>
 
-							<CardItem>
-								<Button full iconRight onPress={this.save}>
-									<Text>Save</Text>
-									{this.state.updating && <Spinner />}
-								</Button>
-							</CardItem>
+							{/* <CardItem> */}
+							<Button full iconRight onPress={this.save} style={{ margin: 15 }}>
+								<Text>Save</Text>
+								{this.state.updating && <Spinner />}
+							</Button>
+							{/* </CardItem> */}
 						</Form>
 					</Card>
 				</Content>

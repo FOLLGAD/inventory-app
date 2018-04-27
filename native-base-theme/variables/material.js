@@ -59,7 +59,7 @@ export default {
     return this.inverseTextColor;
   },
   get btnTextSize() {
-    return this.fontSizeBase - 1;
+    return this.fontSizeBase;
   },
   get btnTextSizeLarge() {
     return this.fontSizeBase * 1.5;
@@ -95,7 +95,7 @@ export default {
   checkboxTickColor: "#fff",
 
   // Color
-  brandPrimary: "#ce4848",
+  brandPrimary: "#ff000f",
   brandInfo: "#3F57D3",
   brandSuccess: "#5cb85c",
   brandDanger: "#d9534f",

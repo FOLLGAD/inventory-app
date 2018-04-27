@@ -2,8 +2,12 @@ import axios from 'axios';
 import store from './store';
 import { apiUrl } from './config';
 
+const getApiUrl = () => {
+	return store.getState().apiUrl || apiUrl;
+}
+
 let axiosInstance = axios.create({
-	baseURL: apiUrl,
+	baseURL: getApiUrl(),
 	headers: {
 		token: store.getState().login.token,
 	},
@@ -12,7 +16,7 @@ let axiosInstance = axios.create({
 store.subscribe(() => {
 	let state = store.getState();
 	axiosInstance = axios.create({
-		baseURL: apiUrl,
+		baseURL: getApiUrl(),
 		headers: {
 			token: state.login.token,
 		},

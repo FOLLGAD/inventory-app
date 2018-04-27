@@ -7,6 +7,7 @@ import {
 	View,
 	ToastAndroid,
 	ScrollView,
+	AsyncStorage,
 } from 'react-native';
 
 import {
@@ -25,6 +26,7 @@ import {
 } from 'react-navigation';
 
 import { connect } from 'react-redux';
+import store from '../store'
 
 import ItemList from '../views/ItemList';
 import ItemScreen from '../views/ItemScreen';
@@ -112,7 +114,14 @@ const DrawerNav = DrawerNavigator({
 	},
 	Profile: {
 		screen: Profile,
-	}
+	},
+	"Log out": {
+		screen: () => {
+			AsyncStorage.removeItem('loginToken')
+			store.dispatch(login({}))
+			return null
+		}
+	},
 }, {
 		navigationOptions: ({ navigation }) => ({
 			headerTitle: <Text>Header</Text>,
@@ -135,6 +144,7 @@ const DrawerNav = DrawerNavigator({
 // );
 
 import { fetchContainers, fetchItems, fetchItemTypes } from '../fetchers'
+import { login } from '../actions';
 
 class Inventory extends Component {
 	componentDidMount() {
@@ -148,11 +158,5 @@ class Inventory extends Component {
 		)
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		backgroundColor: 'green',
-	},
-});
 
 export default connect()(Inventory);

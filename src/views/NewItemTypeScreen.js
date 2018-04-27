@@ -1,5 +1,3 @@
-// @flow
-
 import React, { Component } from 'react';
 
 import { createItemType } from '../api';
@@ -32,9 +30,9 @@ import {
 // Acceptable ObjectTypes with names
 const ObjectTypes = {
 	'String': 'Text',
-	'Number': 'Nummer',
-	'Date': 'Datum',
-	'Boolean': 'Sant/falskt',
+	'Number': 'Number',
+	'Date': 'Date',
+	'Boolean': 'Boolean',
 }
 
 export default class NewItemTypeScreen extends Component {

@@ -7,6 +7,12 @@ export function login({ token, name, phone, email }) {
 		email,
 	}
 }
+export function setApiUrl(apiUrl) {
+	return {
+		type: 'SET_API_URL',
+		apiUrl,
+	}
+}
 export function setMe({ name, phone, email }) {
 	return {
 		type: 'SET_ME',

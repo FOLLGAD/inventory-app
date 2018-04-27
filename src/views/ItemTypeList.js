@@ -62,7 +62,6 @@ class ItemTypeList extends Component {
 					<Card>
 						<List
 							listPress={itemType => {
-								console.log(itemType)
 								this.props.navigation.navigate('ItemType', { itemType })
 							}}
 							onFetch={this.onFetch}
@@ -73,7 +72,7 @@ class ItemTypeList extends Component {
 				</Content>
 				<View>
 					<Fab
-						style={{ backgroundColor: "#ce4848" }}
+						style={{ backgroundColor: "#ff000f" }}
 						position='bottomRight'
 						onPress={() => this.props.navigation.navigate('NewItemType')}
 					>

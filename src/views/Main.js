@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
-import {
-	View,
-	StyleSheet,
-} from 'react-native';
+import { AsyncStorage } from 'react-native';
 
 import {
 	Root,
@@ -18,6 +15,9 @@ import Inventory from './Inventory';
 
 import { connect } from 'react-redux';
 
+import { login, setApiUrl } from '../actions'
+import { fetchMe } from '../fetchers';
+
 class Main extends Component {
 	render() {
 		return (
@@ -28,20 +28,29 @@ class Main extends Component {
 			</Root>
 		);
 	}
-}
-
-function mapStateToProps(state) {
-	return {
-		isLoggedIn: Boolean(state.login.token),
+	componentWillMount() {
+		AsyncStorage.getItem('loginToken').then(token => {
+			if (token) {
+				this.props.dispatchLogin({ token });
+				fetchMe();
+			}
+		})
+		AsyncStorage.getItem('apiUrl').then(apiUrl => {
+			if (apiUrl) {
+				this.props.dispatchApiUrl(apiUrl);
+			}
+		})
 	}
 }
 
-export default connect(mapStateToProps)(Main);
+const mapStateToProps = state => ({
+	isLoggedIn: Boolean(state.login.token),
+	login: state.login,
+})
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		// alignItems: 'center',
-	},
-});
+const mapDispatchToProps = dispatch => ({
+	dispatchLogin: loginData => dispatch(login(loginData)),
+	dispatchApiUrl: apiUrl => dispatch(setApiUrl(apiUrl)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

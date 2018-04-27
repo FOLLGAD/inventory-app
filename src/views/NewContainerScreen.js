@@ -37,7 +37,9 @@ import {
 
 import { connect } from 'react-redux';
 
-import ModalFilterPicker from 'react-native-modal-filter-picker'
+import ModalFilterPicker from 'react-native-modal-filter-picker';
+
+import { fetchContainers } from '../fetchers';
 
 // Acceptable ObjectTypes with names
 const ObjectTypes = {
@@ -81,6 +83,7 @@ class NewContainerScreen extends Component {
 		let { name } = this.state
 		createContainer({ name })
 			.then(() => {
+				fetchContainers()
 				this.props.navigation.goBack()
 			})
 			.catch(err => {
@@ -113,17 +116,21 @@ class NewContainerScreen extends Component {
 		return (
 			<Container>
 				<Content>
-					<Item>
-						<Input
-							placeholder="Name"
-							onChangeText={text => this.setState({ name: text })}
-						/>
-					</Item>
+					<Card>
+						<CardItem>
+							<Item>
+								<Input
+									placeholder="Container name"
+									onChangeText={text => this.setState({ name: text })}
+								/>
+							</Item>
+						</CardItem>
+						<Button full primary onPress={this.post} style={{ margin: 15 }}>
+							<Text>Create</Text>
+						</Button>
+					</Card>
 				</Content>
 
-				<Button block primary onPress={this.post}>
-					<Text>Create</Text>
-				</Button>
 			</Container>
 		);
 	}
