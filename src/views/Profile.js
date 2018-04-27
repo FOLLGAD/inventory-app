@@ -16,6 +16,7 @@ import {
 	Spinner,
 	H1,
 	Body,
+	InputGroup,
 } from 'native-base';
 
 import { connect } from 'react-redux';
@@ -77,7 +78,10 @@ class Profile extends Component {
 				this.props.navigation.navigate('Scanner')
 				fetchMe();
 			})
-			.catch(console.error)
+			.catch(console.log)
+	}
+	cancel = () => {
+		this.props.navigation.navigate('Scanner')
 	}
 	componentWillMount() {
 		fetchMe()
@@ -107,13 +111,15 @@ class Profile extends Component {
 								<Label>Last name</Label>
 								<Input type="text" value={this.state.name.last} onChangeText={this.changeNameLast} />
 							</Item>
-
-							{/* <CardItem> */}
-							<Button full iconRight onPress={this.save} style={{ margin: 15 }}>
-								<Text>Save</Text>
-								{this.state.updating && <Spinner />}
-							</Button>
-							{/* </CardItem> */}
+							<InputGroup style={{ display: "flex", margin: 15, borderBottomColor: "rgba(0,0,0,0)" }}>
+								<Button block iconLeft onPress={this.save} style={{ flexGrow: 1 }} >
+									{this.state.updating && <Spinner />}
+									<Text>Save</Text>
+								</Button>
+								<Button transparent onPress={this.cancel}>
+									<Text>Cancel</Text>
+								</Button>
+							</InputGroup>
 						</Form>
 					</Card>
 				</Content>

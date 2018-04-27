@@ -18,6 +18,7 @@ import {
 	Container,
 	Card,
 	CardItem,
+	Body,
 } from 'native-base';
 
 import { connect } from 'react-redux';
@@ -45,14 +46,14 @@ class ItemTypeList extends Component {
 	}
 	renderItem(itemType) {
 		return (
-			<View>
+			<Body>
 				<Text style={styles.header}>
 					{itemType.name}
 				</Text>
-				<Text style={styles.body}>
-					{itemType.propertyTypes.length} {itemType.propertyTypes.length === 1 ? 'property' : 'properties'}
+				<Text style={{ color: "grey", fontSize: 12 }}>
+					{itemType.n_items} items | {itemType.propertyTypes.length} {itemType.propertyTypes.length === 1 ? 'property' : 'properties'}
 				</Text>
-			</View>
+			</Body>
 		)
 	}
 	render() {

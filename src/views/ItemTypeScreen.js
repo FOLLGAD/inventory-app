@@ -31,16 +31,20 @@ export default class ItemTypeScreen extends Component {
 			title: params ? params.itemType.name : 'Item type',
 			headerRight: (
 				<Button iconRight onLongPress={() => toast('Delete')} transparent onPress={() => {
-					deleteItemType(params.itemType._id)
-						.then(() => {
-							fetchItemTypes()
-							navigation.goBack()
-						})
-						.catch(err => {
-							ToastAndroid.show(err.toString(), ToastAndroid.LONG)
-						})
+					if (params.itemType.n_items === 0) {
+						deleteItemType(params.itemType._id)
+							.then(() => {
+								fetchItemTypes()
+								navigation.goBack()
+							})
+							.catch(err => {
+								ToastAndroid.show(err.toString(), ToastAndroid.LONG)
+							})
+					} else {
+						ToastAndroid.show("Can't delete an Item type with items bound to it", ToastAndroid.LONG)
+					}
 				}}>
-					<Icon name='trash' />
+					<Icon name='trash' style={params.itemType.n_items === 0 ? {} : { color: 'grey' }} />
 				</Button>
 			),
 		}
@@ -56,7 +60,7 @@ export default class ItemTypeScreen extends Component {
 					<Card>
 						<Text></Text>
 						{itemType.propertyTypes.map(d => (
-							<CardItem>
+							<CardItem key={d.name}>
 								<Text style={styles.bold}>{d.name}: </Text><Text style={styles.bigText}>{d.type}</Text>
 							</CardItem>
 						))}

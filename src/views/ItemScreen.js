@@ -64,8 +64,8 @@ export default class ItemScreen extends Component {
 						</CardItem>
 
 						{item.properties.map(d => (
-							<CardItem>
-								<Text key={d.propertyType.name} style={styles.bigText}>
+							<CardItem key={d.propertyType.name}>
+								<Text style={styles.bigText}>
 									<Text style={styles.bold}>{d.propertyType.name}: </Text>
 									{d.value}
 								</Text>

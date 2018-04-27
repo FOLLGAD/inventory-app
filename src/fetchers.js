@@ -5,10 +5,16 @@ import store from './store';
 const dispatch = store.dispatch;
 
 export async function fetchItemTypes() {
-	let data = await getItemTypes()
-	dispatch(setItemTypes(data))
+	let itemTypes = await getItemTypes()
 
-	return data
+	let items = store.getState().items;
+	let populatedItemType = itemTypes.map(itemType => {
+		itemType.n_items = items.filter(item => item.itemType && item.itemType._id == itemType._id).length
+		return itemType
+	})
+	dispatch(setItemTypes(itemTypes))
+
+	return populatedItemType
 }
 export async function fetchItems() {
 	let data = (await getItems()).filter(d => d)
@@ -17,10 +23,17 @@ export async function fetchItems() {
 	return data
 }
 export async function fetchContainers() {
-	let data = await getContainers()
-	dispatch(setContainers(data))
+	let containers = await getContainers();
 
-	return data
+	let items = store.getState().items;
+	let populatedContainers = containers.map(container => {
+		// Set container prop "n_items" to the number of items that are in said container
+		container.n_items = items.filter(item => item.container && item.container._id == container._id).length
+		return container
+	})
+	dispatch(setContainers(populatedContainers))
+
+	return populatedContainers
 }
 export async function fetchMe() {
 	let data = await getMe()

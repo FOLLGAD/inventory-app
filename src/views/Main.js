@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 
-import { AsyncStorage } from 'react-native';
+import {
+	AsyncStorage,
+	ActivityIndicator,
+} from 'react-native';
 
 import {
 	Root,
 	StyleProvider,
+	Container,
 } from 'native-base';
 
 import getTheme from '../../native-base-theme/components';
@@ -19,11 +23,23 @@ import { login, setApiUrl } from '../actions'
 import { fetchMe } from '../fetchers';
 
 class Main extends Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			loading: true,
+		}
+	}
 	render() {
 		return (
 			<Root>
 				<StyleProvider style={getTheme(material)}>
-					{this.props.isLoggedIn ? <Inventory /> : <AppLogin />}
+					{this.state.loading ?
+						<Container style={{ display: "flex", justifyContent: "space-around", alignContent: "center", alignItems: "center" }}>
+							<ActivityIndicator size="large" color="#ff000f" />
+						</Container> :
+						(this.props.isLoggedIn ? <Inventory /> : <AppLogin />)
+					}
 				</StyleProvider>
 			</Root>
 		);
@@ -34,6 +50,7 @@ class Main extends Component {
 				this.props.dispatchLogin({ token });
 				fetchMe();
 			}
+			this.setState({ loading: false });
 		})
 		AsyncStorage.getItem('apiUrl').then(apiUrl => {
 			if (apiUrl) {

@@ -44,7 +44,7 @@ class ContainerList extends Component {
 		return (
 			<View>
 				<Text style={styles.header}>{item.name || "Unnamed container"}</Text>
-				<Text style={styles.greyText}>{item._id}</Text>
+				<Text style={styles.greyText}>{item.n_items} items</Text>
 			</View>
 		)
 	}

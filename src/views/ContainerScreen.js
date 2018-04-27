@@ -37,16 +37,20 @@ class ContainerScreen extends Component {
 			title: params ? params.container.name : 'Container',
 			headerRight: (
 				<Button transparent iconRight rounded onPress={() => {
-					deleteContainer(params.container._id)
-						.then(() => {
-							fetchContainers()
-							navigation.goBack()
-						})
-						.catch(err => {
-							ToastAndroid.show(err.toString(), ToastAndroid.LONG)
-						})
+					if (params.container.n_items === 0) {
+						deleteContainer(params.container._id)
+							.then(() => {
+								fetchContainers()
+								navigation.goBack()
+							})
+							.catch(err => {
+								ToastAndroid.show(err.toString(), ToastAndroid.LONG)
+							})
+					} else {
+						ToastAndroid.show("Can't delete a container with items inside", ToastAndroid.LONG)
+					}
 				}}>
-					<Icon name='trash' />
+					<Icon name='trash' style={params.container.n_items === 0 ? {} : { color: 'grey' }} />
 				</Button>
 			),
 		}

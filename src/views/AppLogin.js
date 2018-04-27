@@ -6,6 +6,9 @@ import {
 	AsyncStorage,
 	ToastAndroid,
 	View,
+	Image,
+	TextInput,
+	BackHandler,
 } from 'react-native';
 
 import {
@@ -18,6 +21,7 @@ import {
 	Form,
 	Text,
 	Label,
+	InputGroup,
 } from 'native-base';
 
 import LoginForm from '../components/LoginForm';
@@ -34,34 +38,30 @@ class AppLogin extends Component {
 		this.state = {
 			settingsOpen: false,
 			customApiUrl: this.props.apiUrl,
+			email: "",
+			password: "",
+			formError: false,
+			loading: false,
 		}
+	}
+	login = () => {
+		let { email, password } = this.state;
 
-		this.login = this.login.bind(this);
-		this.validateLogin = this.validateLogin.bind(this);
-	}
-	handleInput(input) {
-		ToastAndroid.show(`The code is ${input}`, ToastAndroid.LONG);
-	}
-	validateLogin() {
-		return new Promise((res, rej) => {
-			AsyncStorage.getItem('loginToken').then(token => {
-				Boolean(token) ? res(token) : rej();
-			}).catch(rej);
-		})
-	}
-	login(email, password) {
-		const creds = {
-			username: 'demo@demo.com',
-			password: 'demo',
-		};
+		this.setState({ formError: false, loading: true })
 
-		let promise = authorize(email || creds.username, password || creds.password)
+		authorize(email, password)
 			.then((loginData) => {
-				this.props.dispatchLogin(loginData);
 				AsyncStorage.setItem('loginToken', loginData.token);
+				this.setState({ loading: false })
+				this.props.dispatchLogin(loginData);
 			})
 			.catch(err => {
-				console.log(err);
+				let { status, data } = err.response
+
+				this.setState({ formError: true, loading: false })
+				if (status == 401) {
+					ToastAndroid.show("Wrong email or password", ToastAndroid.LONG)
+				}
 			})
 	}
 	openSettings = () => {
@@ -72,12 +72,16 @@ class AppLogin extends Component {
 		AsyncStorage.setItem('apiUrl', this.state.customApiUrl)
 		this.props.dispatchApiUrl(this.state.customApiUrl)
 	}
+	updateForm = (obj) => {
+		this.setState(obj);
+		this.setState({ formError: false })
+	}
 	render() {
 		return (
-			<Container style={{ margin: 10 }}>
+			<Container>
 				<Content>
 					{this.state.settingsOpen ?
-						<Form style={{ display: "flex", alignItems: "center" }}>
+						<Form style={{ display: "flex", alignItems: "center", padding: 10 }}>
 							<Item stackedLabel underline>
 								<Label>API-url</Label>
 								<Input
@@ -97,11 +101,74 @@ class AppLogin extends Component {
 								<Text style={{ fontWeight: 'bold' }}>Save</Text>
 							</Button>
 						</Form> :
-						<LoginForm onSubmit={this.login} onSettings={this.openSettings} />
+						<Form style={{ display: "flex", alignItems: "center", padding: 10 }}>
+							<Image
+								style={{ width: 200, height: 200, }}
+								source={require("../logo.png")}
+							/>
+							<Item error={this.state.formError}>
+								<Input
+									type="email"
+									placeholder="Email address"
+									autoFocus={true}
+									onChangeText={email => this.updateForm({ email })}
+									value={this.state.email}
+									returnKeyType="next"
+									keyboardType="email-address"
+									onSubmitEditing={() => this.passwordInput._root.focus()}
+								/>
+							</Item>
+							<Item error={this.state.formError} last>
+								<Input
+									type="password"
+									placeholder="Password"
+									onChangeText={password => this.updateForm({ password })}
+									value={this.state.password}
+									secureTextEntry={true}
+									onSubmitEditing={this.login}
+									ref={ref => this.passwordInput = ref}
+								/>
+							</Item>
+							<InputGroup style={{ marginTop: 10 }}>
+								<Button
+									onPress={this.login}
+									primary
+									block
+									full
+									style={{ flexGrow: 1 }}
+									type="submit"
+									disabled={this.state.loading}
+								>
+									<Text style={{ fontWeight: 'bold' }}>Log in</Text>
+								</Button>
+								<Button
+									onPress={this.openSettings}
+									light
+									style={{ marginLeft: 5 }}
+								>
+									<Icon name="settings" />
+								</Button>
+							</InputGroup>
+						</Form>
 					}
 				</Content>
 			</Container>
 		);
+	}
+	backHandlerFunc = (e) => {
+		if (this.state.settingsOpen) {
+			this.setState({ settingsOpen: false })
+
+			// App closes if handler does not return true
+			return true
+		}
+		return false
+	}
+	componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.backHandlerFunc);
+	}
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.backHandlerFunc);
 	}
 }
 
