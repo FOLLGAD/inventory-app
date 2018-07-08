@@ -56,9 +56,9 @@ class AppLogin extends Component {
 				this.props.dispatchLogin(loginData);
 			})
 			.catch(err => {
+				this.setState({ formError: true, loading: false })
 				let { status, data } = err.response
 
-				this.setState({ formError: true, loading: false })
 				if (status == 401) {
 					ToastAndroid.show("Wrong email or password", ToastAndroid.LONG)
 				}
